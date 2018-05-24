@@ -8,7 +8,7 @@ import com.cesoft.organizate2.entity.TaskEntity
 /**
  * Created by ccasanova on 23/05/2018
  */
-@Entity//(tableName = "task") --> Then change table name in DAO
+@Entity//(tableName = "task") //--> Then change table name in DAO
 class TaskTable(
         @NonNull
         @PrimaryKey
@@ -20,6 +20,7 @@ class TaskTable(
         val limit: Int,
         val ordering: Int,
         val created: Int,
+        //val throw_exception: Int,
         val modified: Int) {
 
     fun toTaskEntity() = TaskEntity(id, idSuper, name, description, priority, limit, ordering, created, modified)

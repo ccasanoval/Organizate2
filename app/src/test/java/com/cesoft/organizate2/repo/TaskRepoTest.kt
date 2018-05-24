@@ -4,15 +4,19 @@ import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.repo.db.Database
 import com.cesoft.organizate2.repo.db.TaskDao
 import com.cesoft.organizate2.repo.db.TaskReduxTable
+import com.cesoft.organizate2.util.exception.Failure
 import com.cesoft.organizate2.util.extension.None
 import com.cesoft.organizate2.util.functional.Either
 import com.nhaarman.mockito_kotlin.given
 import com.nhaarman.mockito_kotlin.verify
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldEqual
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.verifyZeroInteractions
+import org.mockito.exceptions.base.MockitoException
 import org.mockito.junit.MockitoJUnitRunner
 
 //interactive
@@ -56,128 +60,15 @@ class TaskRepoTest {
         verify(db).dao()
         verify(dao).selectRedux()
     }
-/*
-    @Test
-    fun `movies service should return network failure when no connection`() {
-        given { networkHandler.isConnected }.willReturn(false)
-
-        val movies = taskRepoDB.movies()
-
-        movies shouldBeInstanceOf Either::class.java
-        movies.isLeft shouldEqual true
-        movies.either({ failure -> failure shouldBeInstanceOf NetworkConnection::class.java }, {})
-        verifyZeroInteractions(service)
-    }
 
     @Test
-    fun `movies service should return network failure when undefined connection`() {
-        given { networkHandler.isConnected }.willReturn(null)
+    fun `task repo should return Failure if Database fails`() {
+        given { dao.selectRedux() }.willThrow(MockitoException("test"))
+        val tasks = taskRepoDB.getTasksList()
 
-        val movies = taskRepoDB.movies()
-
-        movies shouldBeInstanceOf Either::class.java
-        movies.isLeft shouldEqual true
-        movies.either({ failure -> failure shouldBeInstanceOf NetworkConnection::class.java }, {})
-        verifyZeroInteractions(service)
+        tasks shouldBeInstanceOf Either::class.java
+        tasks.isLeft shouldEqual true
+        tasks.either({ failure -> failure shouldBeInstanceOf Failure.Database::class.java }, {})
     }
 
-    @Test
-    fun `movies service should return server error if no successful response`() {
-        given { networkHandler.isConnected }.willReturn(true)
-
-        val movies = taskRepoDB.movies()
-
-        movies shouldBeInstanceOf Either::class.java
-        movies.isLeft shouldEqual true
-        movies.either({ failure -> failure shouldBeInstanceOf ServerError::class.java }, {})
-    }
-
-    @Test
-    fun `movies request should catch exceptions`() {
-        given { networkHandler.isConnected }.willReturn(true)
-
-        val movies = taskRepoDB.movies()
-
-        movies shouldBeInstanceOf Either::class.java
-        movies.isLeft shouldEqual true
-        movies.either({ failure -> failure shouldBeInstanceOf ServerError::class.java }, {})
-    }
-
-    @Test
-    fun `should return empty movie details by default`() {
-        given { networkHandler.isConnected }.willReturn(true)
-        given { movieDetailsResponse.body() }.willReturn(null)
-        given { movieDetailsResponse.isSuccessful }.willReturn(true)
-        given { movieDetailsCall.execute() }.willReturn(movieDetailsResponse)
-        given { service.movieDetails(1) }.willReturn(movieDetailsCall)
-
-        val movieDetails = taskRepoDB.movieDetails(1)
-
-        movieDetails shouldEqual Right(MovieDetails.empty())
-        verify(service).movieDetails(1)
-    }
-
-    @Test
-    fun `should get movie details from service`() {
-        given { networkHandler.isConnected }.willReturn(true)
-        given { movieDetailsResponse.body() }.willReturn(
-                MovieDetailsEntity(8, "title", String.empty(), String.empty(),
-                        String.empty(), String.empty(), 0, String.empty()))
-        given { movieDetailsResponse.isSuccessful }.willReturn(true)
-        given { movieDetailsCall.execute() }.willReturn(movieDetailsResponse)
-        given { service.movieDetails(1) }.willReturn(movieDetailsCall)
-
-        val movieDetails = taskRepoDB.movieDetails(1)
-
-        movieDetails shouldEqual Right(MovieDetails(8, "title", String.empty(), String.empty(),
-                String.empty(), String.empty(), 0, String.empty()))
-        verify(service).movieDetails(1)
-    }
-
-    @Test
-    fun `movie details service should return network failure when no connection`() {
-        given { networkHandler.isConnected }.willReturn(false)
-
-        val movieDetails = taskRepoDB.movieDetails(1)
-
-        movieDetails shouldBeInstanceOf Either::class.java
-        movieDetails.isLeft shouldEqual true
-        movieDetails.either({ failure -> failure shouldBeInstanceOf NetworkConnection::class.java }, {})
-        verifyZeroInteractions(service)
-    }
-
-    @Test
-    fun `movie details service should return network failure when undefined connection`() {
-        given { networkHandler.isConnected }.willReturn(null)
-
-        val movieDetails = taskRepoDB.movieDetails(1)
-
-        movieDetails shouldBeInstanceOf Either::class.java
-        movieDetails.isLeft shouldEqual true
-        movieDetails.either({ failure -> failure shouldBeInstanceOf NetworkConnection::class.java }, {})
-        verifyZeroInteractions(service)
-    }
-
-    @Test
-    fun `movie details service should return server error if no successful response`() {
-        given { networkHandler.isConnected }.willReturn(true)
-
-        val movieDetails = taskRepoDB.movieDetails(1)
-
-        movieDetails shouldBeInstanceOf Either::class.java
-        movieDetails.isLeft shouldEqual true
-        movieDetails.either({ failure -> failure shouldBeInstanceOf ServerError::class.java }, {})
-    }
-
-    @Test
-    fun `movie details request should catch exceptions`() {
-        given { networkHandler.isConnected }.willReturn(true)
-
-        val movieDetails = taskRepoDB.movieDetails(1)
-
-        movieDetails shouldBeInstanceOf Either::class.java
-        movieDetails.isLeft shouldEqual true
-        movieDetails.either({ failure -> failure shouldBeInstanceOf ServerError::class.java }, {})
-    }
-*/
 }

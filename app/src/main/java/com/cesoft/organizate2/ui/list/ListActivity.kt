@@ -43,13 +43,15 @@ class ListActivity : AppCompatActivity() {
         appComponent.inject(this)
         //listViewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)-->Sin dagger
         listViewModel = ViewModelProviders.of(this, viewModelFactory)[ListViewModel::class.java]
-        listViewModel.loadTask()
-        listViewModel.getTasks().observe(this,
-                Observer {
-                    tasks ->
-                    tasks!!.map { Log.e(TAG, "ITEM----------------"+it) }
-                })
 
+        listViewModel.failure.observe(this, Observer { failure ->
+            Log.e(TAG, "onCreate:e:------------------------------------------------------------"+failure)
+        })
+        listViewModel.getTasks().observe(this, Observer { tasks ->
+            tasks!!.map { Log.e(TAG, "ITEM----------------"+it) }
+        })
+
+        listViewModel.loadTask()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

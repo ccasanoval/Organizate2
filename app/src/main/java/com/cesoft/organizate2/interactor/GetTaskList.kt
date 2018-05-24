@@ -8,7 +8,7 @@ import javax.inject.Inject
  * Created by ccasanova on 24/05/2018
  */
 class GetTaskList
-@Inject constructor(private val repo: TaskRepo)//.DataBase)
+@Inject constructor(private val repo: TaskRepo)
     : UseCase<List<TaskReduxEntity>, UseCase.None>() {
 
     override suspend fun run(params: None) = repo.getTasksList()

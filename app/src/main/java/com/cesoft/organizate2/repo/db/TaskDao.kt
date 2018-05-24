@@ -18,10 +18,10 @@ interface TaskDao {
     fun selectById(id: Int) : TaskTable
     @Query("SELECT * FROM TaskTable ")
     fun select() : List<TaskTable>
-    @Query("SELECT id, idSuper, name, ordering FROM TaskTable ")
+    @Query("SELECT id, idSuper, name, ordering FROM TaskTable")
     fun selectRedux() : List<TaskReduxTable>
-    @Query("SELECT * FROM TaskTable ")
-    fun selectAsync() : LiveData<List<TaskTable>>
+    //@Query("SELECT * FROM TaskTable")
+    //fun selectAsync() : LiveData<List<TaskTable>>
 
     @Update
     fun update(task: TaskTable)
