@@ -11,17 +11,17 @@ import android.view.Menu
 import android.view.MenuItem
 import com.cesoft.organizate2.App
 import com.cesoft.organizate2.R
-import com.cesoft.organizate2.entity.TaskEntity.Companion.NONE
 import com.cesoft.organizate2.repo.Database
-import com.cesoft.organizate2.repo.TaskTable
 import com.cesoft.organizate2.util.di.AppComponent
+
+import com.cesoft.organizate2.util.extension.None
 
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class ListActivity : AppCompatActivity() {
 
-    val appComponent: AppComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
+    private val appComponent: AppComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
         (application as App).appComponent
     }
 
@@ -73,13 +73,10 @@ class ListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        Thread {
+        /*Thread {
             Log.e(TAG, "-------------INI")
 
             var lastId = 0
-            /*var db : Database = Room.databaseBuilder(applicationContext, Database::class.java, "organizate.db")
-                    .fallbackToDestructiveMigration()
-                    .build()*/
             val list = db.dao().select()
             for(item in list) {
                 Log.e(TAG, "-------------"+item)
@@ -88,13 +85,13 @@ class ListActivity : AppCompatActivity() {
                     lastId = item2.id
             }
 
-            val task = TaskTable(
-                    lastId+1, NONE,
+            val task = com.cesoft.organizate2.repo.TaskTable(
+                    lastId+1, Int.None,
                     "Tarea "+(lastId+1), "Descripción de la Tarea",
-                    NONE, NONE, NONE, NONE, NONE)
+                    Int.None, Int.None, Int.None, Int.None, Int.None)
             db.dao().insert(task)
 
-        }.start()
+        }.start()*/
     }
 
     companion object {

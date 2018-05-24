@@ -15,15 +15,15 @@ class TaskTable(
         val id: Int,
         val idSuper: Int,
         val name: String,
-        val description: String = "",
-        val priority: Int = 0,
-        val limit: Int = 0,
-        val order: Int = 0,
-        val created: Int = 0,
-        val modified: Int = 0) {
+        val description: String,
+        val priority: Int,
+        val limit: Int,
+        val ordering: Int,
+        val created: Int,
+        val modified: Int) {
 
-    fun toTaskEntity() = TaskEntity(id, idSuper, name, description, priority, limit, order, created, modified)
-    override fun toString() = "{Task: {id:"+id+", id_padre:"+idSuper+", name:"+name+", description:"+description+"} }"
+    fun toTaskEntity() = TaskEntity(id, idSuper, name, description, priority, limit, ordering, created, modified)
+    override fun toString() = "{Task: {id:"+id+", id_padre:"+idSuper+", name:"+name+", description:"+description+", priority:"+priority+", limit:"+limit+", order:"+ordering+"} }"
 
     /*fun getId() = id
     fun getIdSuper() = idSuper
