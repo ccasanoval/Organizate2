@@ -3,7 +3,8 @@ package com.cesoft.organizate2.util.di
 import android.arch.persistence.room.Room
 import android.content.Context
 import com.cesoft.organizate2.App
-import com.cesoft.organizate2.repo.Database
+import com.cesoft.organizate2.repo.TaskRepo
+import com.cesoft.organizate2.repo.db.Database
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -21,11 +22,16 @@ class AppModule(private val app: App) {
 
     @Provides
     @Singleton
-    fun provideRetrofit(): Database {
+    fun provideDatabase(): Database {
         return Room.databaseBuilder(app, Database::class.java, "organizate.db")
                 .fallbackToDestructiveMigration()
                 .build()
     }
+
+    @Provides
+    @Singleton
+    fun provideRepo(dataSource: TaskRepo.DataBase): TaskRepo = dataSource
+
 
     /*@Provides
     @Singleton

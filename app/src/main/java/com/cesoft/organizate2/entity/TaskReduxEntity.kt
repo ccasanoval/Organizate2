@@ -12,6 +12,6 @@ data class TaskReduxEntity(
         val order: Int) {
 
     companion object {
-        val none = TaskReduxEntity(Int.None, Int.None, String.None, Int.None)
+        val None = TaskReduxEntity(Int.None, Int.None, String.None, Int.None)
     }
 }

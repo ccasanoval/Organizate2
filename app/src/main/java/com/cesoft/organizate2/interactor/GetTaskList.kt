@@ -1,17 +1,15 @@
 package com.cesoft.organizate2.interactor
 
 import com.cesoft.organizate2.entity.TaskReduxEntity
-import com.cesoft.organizate2.repo.Database
-import com.cesoft.organizate2.util.functional.Either
+import com.cesoft.organizate2.repo.TaskRepo
 import javax.inject.Inject
 
 /**
  * Created by ccasanova on 24/05/2018
  */
 class GetTaskList
-    @Inject constructor(private val repo: Database)
+@Inject constructor(private val repo: TaskRepo)//.DataBase)
     : UseCase<List<TaskReduxEntity>, UseCase.None>() {
 
-    override suspend fun run(params: None)
-            = Either.Right( repo.dao().selectRedux().map { it.toTaskEntity() } )
+    override suspend fun run(params: None) = repo.getTasksList()
 }

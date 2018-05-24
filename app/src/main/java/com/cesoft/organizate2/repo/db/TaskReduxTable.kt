@@ -1,4 +1,4 @@
-package com.cesoft.organizate2.repo
+package com.cesoft.organizate2.repo.db
 
 import com.cesoft.organizate2.entity.TaskReduxEntity
 

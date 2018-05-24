@@ -18,16 +18,10 @@ class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : Bas
 
 
     private fun handleTaskList(tasks: List<TaskReduxEntity>) {
-        this.tasks.value = tasks//movies.map { TaskRedux(it.id, it.poster) }
+        this.tasks.value = tasks
     }
     fun loadTask() {
         getTasks.execute({ it.either(::handleFailure, ::handleTaskList) }, UseCase.None())
-        /*Thread {
-            val listDb = db.dao().select()
-            //tasks.value = listDb.map { it.toTaskEntity() }
-            tasks.postValue(listDb.map { it.toTaskEntity() })
-        }.start()*/
-        //tasks.value = db.dao().selectAsync().value
     }
 
     fun getTasks(): LiveData<List<TaskReduxEntity>> = tasks

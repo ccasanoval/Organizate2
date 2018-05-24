@@ -11,10 +11,8 @@ import android.view.Menu
 import android.view.MenuItem
 import com.cesoft.organizate2.App
 import com.cesoft.organizate2.R
-import com.cesoft.organizate2.repo.Database
+import com.cesoft.organizate2.repo.db.Database
 import com.cesoft.organizate2.util.di.AppComponent
-
-import com.cesoft.organizate2.util.extension.None
 
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -85,7 +83,7 @@ class ListActivity : AppCompatActivity() {
                     lastId = item2.id
             }
 
-            val task = com.cesoft.organizate2.repo.TaskTable(
+            val task = com.cesoft.organizate2.repo.db.TaskTable(
                     lastId+1, Int.None,
                     "Tarea "+(lastId+1), "Descripción de la Tarea",
                     Int.None, Int.None, Int.None, Int.None, Int.None)

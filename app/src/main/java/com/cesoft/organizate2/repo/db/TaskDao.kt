@@ -1,4 +1,4 @@
-package com.cesoft.organizate2.repo
+package com.cesoft.organizate2.repo.db
 
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
