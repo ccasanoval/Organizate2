@@ -11,15 +11,16 @@ data class TaskEntity(
         val name: String,
         val description: String,
         val priority: Int,
-        val limit: Int,
-        val order: Int,
-        val created: Int,
-        val modified: Int) {
+        val ordering: Int,
+        val limit: Long,
+        val created: Long,
+        val modified: Long) {
 
     companion object {
-        val none = TaskEntity(
+        val None = TaskEntity(
                 Int.None, Int.None,
                 String.None, String.None,
-                Int.None, Int.None, Int.None, Int.None, Int.None)
+                Int.None, Int.None,
+                Long.None, Long.None, Long.None)
     }
 }

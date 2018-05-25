@@ -8,7 +8,7 @@ import com.cesoft.organizate2.entity.TaskEntity
 /**
  * Created by ccasanova on 23/05/2018
  */
-@Entity//(tableName = "task") //--> Then change table name in DAO
+@Entity(tableName = TaskTableContract.TABLE_NAME) //--> Then change table name in DAO
 class TaskTable(
         @NonNull
         @PrimaryKey
@@ -17,20 +17,18 @@ class TaskTable(
         val name: String,
         val description: String,
         val priority: Int,
-        val limit: Int,
         val ordering: Int,
-        val created: Int,
+        val limit: Long,
+        val created: Long,
         //val throw_exception: Int,
-        val modified: Int) {
+        val modified: Long) {
 
-    fun toTaskEntity() = TaskEntity(id, idSuper, name, description, priority, limit, ordering, created, modified)
-    override fun toString() = "{Task: {id:"+id+", id_padre:"+idSuper+", name:"+name+", description:"+description+", priority:"+priority+", limit:"+limit+", order:"+ordering+"} }"
+    fun toTaskEntity() = TaskEntity(id, idSuper, name, description, priority, ordering, limit, created, modified)
+    override fun toString() = "{TaskTable: {id:"+id+", id_padre:"+idSuper+", name:"+name+", description:"+description+", priority:"+priority+", order:"+ordering+", limit:"+limit+"} }"
 
     /*fun getId() = id
     fun getIdSuper() = idSuper
     fun getName() = name
     fun getDescription() = description
     fun getPriority() = priority*/
-
-    companion object { }
 }

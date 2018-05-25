@@ -12,5 +12,5 @@ class GetTaskDetails
 @Inject constructor(private val repo: TaskRepo)
     : UseCase<TaskEntity, Int>() {
 
-    override suspend fun run(id: Int) = repo.getTaskDetails(id)
+    override suspend fun run(params: Int) = repo.getTaskDetails(params)
 }

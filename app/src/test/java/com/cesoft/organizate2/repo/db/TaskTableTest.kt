@@ -12,8 +12,11 @@ class TaskTableTest {
 
     @Test
     fun toTaskEntityTest() {
-        val taskDb = TaskTable(1, Int.None, "Tarea 1", "Descripción 1", 1, 123456789, 10, 12345, 543210)
-        val task = TaskEntity(1, Int.None, "Tarea 1", "Descripción 1", 1, 123456789, 10, 12345, 543210)
+        val now = System.currentTimeMillis()
+        val taskDb = TaskTable(1, Int.None, "Tarea 1", "Descripción 1",
+                1, 3, now, 12345, 543210)
+        val task  = TaskEntity(1, Int.None, "Tarea 1", "Descripción 1",
+                1, 3, now, 12345, 543210)
 
         task shouldEqual taskDb.toTaskEntity()
     }

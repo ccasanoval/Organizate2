@@ -16,7 +16,6 @@ class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : Bas
 
     private val tasks: MutableLiveData<List<TaskReduxEntity>> = MutableLiveData()
 
-
     private fun handleTaskList(tasks: List<TaskReduxEntity>) {
         this.tasks.value = tasks
     }
