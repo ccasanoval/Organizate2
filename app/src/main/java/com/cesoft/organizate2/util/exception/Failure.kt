@@ -10,4 +10,5 @@ sealed class Failure {
 
     /** * Extend this class for feature specific failures.*/
     abstract class FeatureFailure: Failure()
+    class TaskIdNotFound : FeatureFailure()
 }

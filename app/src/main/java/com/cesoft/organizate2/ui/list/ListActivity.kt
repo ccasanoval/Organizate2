@@ -76,6 +76,17 @@ class ListActivity : AppCompatActivity() {
         /*Thread {
             Log.e(TAG, "-------------INI")
 
+            val task = db.dao().selectById(696969)
+            if(task == null)
+                Log.e(TAG, "---------------SEGUN LINT ESTO NUNCA OCURRE-------------")
+
+            Log.e(TAG, "---------------TASK 696969-------------"+task)
+
+        }.start()*/
+
+        /*Thread {
+            Log.e(TAG, "-------------INI")
+
             var lastId = 0
             val list = db.dao().select()
             for(item in list) {

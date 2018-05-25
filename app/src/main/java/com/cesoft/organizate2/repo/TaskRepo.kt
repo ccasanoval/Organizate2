@@ -5,6 +5,7 @@ import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.util.exception.Failure
 import com.cesoft.organizate2.util.functional.Either
 import com.cesoft.organizate2.repo.db.Database
+import com.cesoft.organizate2.util.Log
 import javax.inject.Inject
 
 /**
@@ -35,13 +36,21 @@ interface TaskRepo {
             }
         }
         override fun getTaskDetails(id: Int): Either<Failure, TaskEntity> {
-            val taskDb = db.dao().selectById(id)
-            val task = taskDb.toTaskEntity()
-            return Either.Right(task)
+            try {
+                val taskDb = db.dao().selectById(id)
+                if(taskDb != null)
+                    return Either.Right(taskDb.toTaskEntity())
+                else
+                    return Either.Left(Failure.TaskIdNotFound())
+            }
+            catch(e: Exception) {
+                Log.e(TAG, "TaskRepo:DataBase:getTaskDetails:e:----------------------------------",e)
+                return Either.Left(Failure.Database())
+            }
         }
 
         companion object {
-            //val TAG: String = DataBase::class.java.simpleName
+            val TAG: String = DataBase::class.java.simpleName
         }
     }
 }

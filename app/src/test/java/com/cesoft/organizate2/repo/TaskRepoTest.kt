@@ -4,6 +4,7 @@ import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.repo.db.Database
 import com.cesoft.organizate2.repo.db.TaskDao
 import com.cesoft.organizate2.repo.db.TaskReduxTable
+import com.cesoft.organizate2.repo.db.TaskTable
 import com.cesoft.organizate2.util.exception.Failure
 import com.cesoft.organizate2.util.extension.None
 import com.cesoft.organizate2.util.functional.Either
@@ -39,6 +40,7 @@ class TaskRepoTest {
         given { db.dao() }.willReturn(dao)
     }
 
+    //----------------------------------------------------------------------------------------------
     @Test
     fun `should return empty list by default`() {
         given { dao.selectRedux() }.willReturn( listOf<TaskReduxTable>() )
@@ -62,7 +64,7 @@ class TaskRepoTest {
     }
 
     @Test
-    fun `task repo should return Failure if Database fails`() {
+    fun `repo should return Failure if Database fails`() {
         given { dao.selectRedux() }.willThrow(MockitoException("test"))
         val tasks = taskRepoDB.getTasksList()
 
@@ -71,4 +73,41 @@ class TaskRepoTest {
         tasks.either({ failure -> failure shouldBeInstanceOf Failure.Database::class.java }, {})
     }
 
+    //----------------------------------------------------------------------------------------------
+    @Test
+    fun `should return Failure by default`() {
+        val id = 696969
+        given { dao.selectById(id) }.willReturn( null )
+        val task = taskRepoDB.getTaskDetails(id)
+
+        task shouldBeInstanceOf Either::class.java
+        task.isLeft shouldEqual true
+        task.either({ failure -> failure shouldBeInstanceOf Failure.TaskIdNotFound::class.java }, {})
+        verify(db).dao()
+        verify(dao).selectById(id)
+    }
+
+    @Test
+    fun `should get task from database`() {
+        val id = 1
+        val taskDb = TaskTable(1, Int.None, "Tarea 1", "Descripción 1", 10, 123, 9, 5432, 7654)
+        given { dao.selectById(id) }.willReturn(taskDb)
+        val task = taskRepoDB.getTaskDetails(id)
+
+        //val task = TaskReduxEntity(1, Int.None, "Tarea 1", 10)
+        task shouldEqual Either.Right(taskDb.toTaskEntity())
+        verify(db).dao()
+        verify(dao).selectById(id)
+    }
+
+    @Test
+    fun `repo should return Failure if Database fails 2`() {
+        val id = 1
+        given { dao.selectById(id) }.willThrow(MockitoException("test"))
+        val tasks = taskRepoDB.getTaskDetails(id)
+
+        tasks shouldBeInstanceOf Either::class.java
+        tasks.isLeft shouldEqual true
+        tasks.either({ failure -> failure shouldBeInstanceOf Failure.Database::class.java }, {})
+    }
 }
