@@ -5,7 +5,6 @@ import com.cesoft.organizate2.repo.db.Database
 import com.cesoft.organizate2.repo.db.TaskDao
 import com.cesoft.organizate2.repo.db.TaskReduxTable
 import com.cesoft.organizate2.repo.db.TaskTable
-import com.cesoft.organizate2.util.Log
 import com.cesoft.organizate2.util.LogInterface
 import com.cesoft.organizate2.util.exception.Failure
 import com.cesoft.organizate2.util.extension.None
@@ -98,7 +97,8 @@ class TaskRepoTest {
     @Test
     fun `should get task from database`() {
         val id = 1
-        val taskDb = TaskTable(1, Int.None, "Tarea 1", "Descripción 1", 10, 123, 9, 5432, 7654)
+        val taskDb = TaskTable(1, Int.None, "Tarea 1", "Descripción 1",
+                10, 123, 9, 5432, 7654)
         given { dao.selectById(id) }.willReturn(taskDb)
         val task = taskRepoDB.getTaskDetails(id)
 

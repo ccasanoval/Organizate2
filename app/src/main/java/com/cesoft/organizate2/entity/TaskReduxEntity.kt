@@ -9,9 +9,10 @@ data class TaskReduxEntity(
         val id: Int,
         val idSuper: Int,
         val name: String,
-        val order: Int) {
+        val ordering: Int,
+        val childs: List<TaskReduxEntity>) {
 
     companion object {
-        val None = TaskReduxEntity(Int.None, Int.None, String.None, Int.None)
+        val None = TaskReduxEntity(Int.None, Int.None, String.None, Int.None, listOf())
     }
 }

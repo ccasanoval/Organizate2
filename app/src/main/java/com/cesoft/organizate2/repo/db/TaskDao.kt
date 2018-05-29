@@ -24,8 +24,8 @@ interface TaskDao {
     fun selectById(id: Int) : TaskTable?
     @Query("SELECT id, idSuper, name, ordering FROM "+TaskTableContract.TABLE_NAME)
     fun selectRedux() : List<TaskReduxTable>
-    //@Query("SELECT * FROM "+TaskTableContract.TABLE_NAME)
-    //fun select() : List<TaskTable>
+    @Query("SELECT * FROM "+TaskTableContract.TABLE_NAME)
+    fun select() : List<TaskTable>
     //@Query("SELECT * FROM TaskTable")
     //fun selectAsync() : LiveData<List<TaskTable>>
 

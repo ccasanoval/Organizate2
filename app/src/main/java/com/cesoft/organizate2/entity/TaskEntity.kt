@@ -14,13 +14,15 @@ data class TaskEntity(
         val ordering: Int,
         val limit: Long,
         val created: Long,
-        val modified: Long) {
+        val modified: Long,
+        val childs: List<TaskEntity>) {
 
     companion object {
         val None = TaskEntity(
                 Int.None, Int.None,
                 String.None, String.None,
                 Int.None, Int.None,
-                Long.None, Long.None, Long.None)
+                Long.None, Long.None, Long.None,
+                listOf())
     }
 }
