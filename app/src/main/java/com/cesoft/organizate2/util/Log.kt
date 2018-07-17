@@ -1,5 +1,6 @@
 package com.cesoft.organizate2.util
 
+import android.os.Build
 import com.cesoft.organizate2.BuildConfig
 
 /**
@@ -11,11 +12,15 @@ interface LogInterface {
 
     class Log : LogInterface {
         override fun e(tag: String, msg: String, t: Throwable?) {
-            if(BuildConfig.DEBUG)
+            if(Build.MODEL.toLowerCase().contains("sdk"))
+                System.err.println("$tag : $msg : $t")
+            else if(BuildConfig.DEBUG)
                 android.util.Log.e(tag, msg, t)
         }
         override fun d(tag: String, msg: String) {
-            if(BuildConfig.DEBUG)
+            if(Build.MODEL.toLowerCase().contains("sdk"))
+                System.err.println("$tag : $msg")
+            else if(BuildConfig.DEBUG)
                 android.util.Log.d(tag, msg)
         }
     }

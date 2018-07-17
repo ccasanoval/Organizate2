@@ -9,9 +9,9 @@ data class TaskEntity(
         val id: Int,
         val idSuper: Int,
         val name: String,
+        val level: Int,
         val description: String,
         val priority: Int,
-        val ordering: Int,
         val limit: Long,
         val created: Long,
         val modified: Long,
@@ -20,8 +20,8 @@ data class TaskEntity(
     companion object {
         val None = TaskEntity(
                 Int.None, Int.None,
-                String.None, String.None,
-                Int.None, Int.None,
+                String.None, Int.None,
+                String.None, Int.None,
                 Long.None, Long.None, Long.None,
                 listOf())
     }

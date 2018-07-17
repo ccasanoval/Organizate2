@@ -15,33 +15,33 @@ data class TaskTable(
         override val id: Int,
         override val idSuper: Int,
         override val name: String,
+        override val level: Int,
         val description: String,
         val priority: Int,
-        override val ordering: Int,
         val limit: Long,
         val created: Long,
         //val throw_test_exception: Int,
         val modified: Long)
-    : TaskTableBase(id, idSuper, name, ordering) {
+    : TaskTableBase(id, idSuper, name, level) {
 
     //override val childs: ArrayList<TaskTable> = ArrayList()
     constructor(id: Int,
                 idSuper: Int,
                 name: String,
+                level: Int,
                 description: String,
                 priority: Int,
-                ordering: Int,
                 limit: Long,
                 created: Long,
                 modified: Long,
                 childs: ArrayList<TaskTable>)
-            : this(id, idSuper, name, description, priority, ordering, limit, created, modified) {
+            : this(id, idSuper, name, level, description, priority, limit, created, modified) {
         this.childs.clear()
         this.childs.addAll(childs)
     }
 
     fun toTaskEntity(): TaskEntity {
-        return TaskEntity(id, idSuper, name, description, priority, ordering, limit,
+        return TaskEntity(id, idSuper, name, level, description, priority, limit,
                 created, modified, childs.map { it -> (it as TaskTable).toTaskEntity() })
     }
 
@@ -53,7 +53,7 @@ data class TaskTable(
     }*/
 
 
-    //override fun toString() = "{TaskTable: {id:"+id+", id_padre:"+idSuper+", name:"+name+", description:"+description+", priority:"+priority+", order:"+ordering+", limit:"+limit+"} }"
+    //override fun toString() = "{TaskTable: {id:"+id+", id_padre:"+idSuper+", name:"+name+", description:"+description+", priority:"+priority+", :"++", limit:"+limit+"} }"
 
     /*fun getId() = id
     fun getIdSuper() = idSuper

@@ -4,8 +4,9 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL1
 import com.cesoft.organizate2.util.extension.None
-import junit.framework.Assert.*
+import org.junit.Assert.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -20,8 +21,8 @@ import java.util.ArrayList
 class TaskTableInstrumentedTest {
 
     //@Rule
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
+    //@get:Rule
+    //var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private var mDatabase: Database? = null
     private var dao: TaskDao? = null
@@ -41,11 +42,12 @@ class TaskTableInstrumentedTest {
         mDatabase!!.close()
     }
 
-    fun getFakeTasks(size: Int, idFrom: Int = 1, idParent: Int = Int.None): List<TaskTable> {
+    private fun getFakeTasks(size: Int, idFrom: Int = 1, idParent: Int = Int.None): List<TaskTable> {
         val list = ArrayList<TaskTable>()
         for(i in idFrom until idFrom+size) {
-            val task = TaskTable(i, idParent, "Title $i", "Desc $i",
-                    5, i,System.currentTimeMillis()+10*60*60*1000,
+            val task = TaskTable(i, idParent, "Title $i",
+                    LEVEL1,"Desc $i",
+                    5, System.currentTimeMillis()+10*60*60*1000,
                     System.currentTimeMillis(), System.currentTimeMillis())
             list.add(task)
         }
@@ -71,7 +73,7 @@ class TaskTableInstrumentedTest {
         val list1 = getFakeTasks(5)
         list1.forEach { task -> dao!!.insert(task) }
         val list2 = dao!!.selectRedux()
-        val list3 = list1.map { task -> TaskReduxTable(task.id, task.idSuper, task.name, task.ordering) }//task.toTaskEntity() }
+        val list3 = list1.map { task -> TaskReduxTable(task.id, task.idSuper, task.name, task.level) }//task.toTaskEntity() }
         val list4 = list3.map { task -> task.toTaskEntity() }
         val list5 = list2.map { task -> task.toTaskEntity() }
 
@@ -103,26 +105,27 @@ class TaskTableInstrumentedTest {
     fun onUpdating_checkIf_UpdateHappensCorrectly() {
         val task = getFakeTasks(1)[0]
         dao!!.insert(task)
-        val sUpdated = "-UPDATED-"
-        val task2 = TaskTable(task.id, task.idSuper, sUpdated, task.description,
-                task.priority, task.ordering,task.limit,task.created,task.modified)
+        val sNameUpdated = "-UPDATED-"
+        val task2 = TaskTable(task.id, task.idSuper, sNameUpdated,
+                task.level, task.description,
+                task.priority,task.limit,task.created,task.modified)
         dao!!.update(task2)
         val list = dao!!.select()
         val task3 = dao!!.selectById(task.id)
 
         assertEquals(1, list.size)
-        assertEquals(sUpdated, task3!!.name)
+        assertEquals(sNameUpdated, task3!!.name)
     }
     /* No need to update Redux
     @Test
     @Throws(InterruptedException::class)
     fun onUpdating_checkIf_UpdateHappensCorrectly_REDUX() {
         val taskOri = getFakeTasks(1)[0]
-        val task = taskOri//TaskReduxTable(taskOri)//TaskReduxTable(taskOri.id, taskOri.idSuper, taskOri.name, taskOri.ordering)
+        val task = taskOri//TaskReduxTable(taskOri)//TaskReduxTable(taskOri.id, taskOri.idSuper, taskOri.name, taskOri.)
         dao!!.insert(task)
         val sUpdated = "-UPDATED-"
         val task2 = TaskTable(task.id, task.idSuper, sUpdated, task.description,
-                task.priority, task.ordering,task.limit,task.created,task.modified)
+                task.priority, task.,task.limit,task.created,task.modified)
         dao!!.update(task2)
         val list = dao!!.select()
         val task3 = dao!!.selectById(task.id)

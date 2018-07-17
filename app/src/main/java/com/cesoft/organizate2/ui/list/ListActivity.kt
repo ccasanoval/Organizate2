@@ -11,10 +11,17 @@ import android.view.Menu
 import android.view.MenuItem
 import com.cesoft.organizate2.App
 import com.cesoft.organizate2.R
+import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL1
+import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL2
+import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL3
 import com.cesoft.organizate2.repo.db.Database
+import com.cesoft.organizate2.repo.db.TaskTable
+import com.cesoft.organizate2.ui.base.NivelUnoListAdapter
 import com.cesoft.organizate2.util.di.AppComponent
+import com.cesoft.organizate2.util.extension.None
 
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.content_main.*
 import javax.inject.Inject
 
 class ListActivity : AppCompatActivity() {
@@ -30,14 +37,18 @@ class ListActivity : AppCompatActivity() {
 
     private lateinit var listViewModel: ListViewModel
 
+    //private var expListView: ExpandableListView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        //uiTaskList
+
+        fab.setOnClickListener { _ ->
+            listViewModel.onAddTask()
+            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
         }
 
         appComponent.inject(this)
@@ -48,7 +59,10 @@ class ListActivity : AppCompatActivity() {
             Log.e(TAG, "onCreate:e:------------------------------------------------------------"+failure)
         })
         listViewModel.getTasks().observe(this, Observer { tasks ->
-            tasks!!.map { Log.e(TAG, "ITEM----------------"+it) }
+            Log.e(TAG, "getTasks().observe----------------------------------------------------"+tasks?.size)
+
+            tasks!!.onEach { Log.e(TAG, "ITEM:getTasks().observe:---------------------"+it) }
+            uiTaskList.setAdapter(NivelUnoListAdapter(applicationContext, uiTaskList, tasks!!))
         })
 
         listViewModel.loadTask()
@@ -70,8 +84,36 @@ class ListActivity : AppCompatActivity() {
         }
     }
 
+    private fun getFakeTasks(size: Int, level: Int, idFrom: Int, idParent: Int = Int.None): List<TaskTable> {
+        val list = ArrayList<TaskTable>()
+        for(i in idFrom until idFrom+size) {
+            val task = TaskTable(i, idParent, "Title $i",
+                    level,"Desc $i",
+                    5, System.currentTimeMillis()+10*60*60*1000,
+                    System.currentTimeMillis(), System.currentTimeMillis())
+            list.add(task)
+        }
+        return list
+    }
     override fun onResume() {
         super.onResume()
+
+        listViewModel.loadTask()
+
+        Thread {
+            val level1a = getFakeTasks(2, LEVEL1,1)                 //L1: 1..2..3
+            val level2a = getFakeTasks(2, LEVEL2,10, 1)     //L2: 10..11..12..13..14
+            val level2b = getFakeTasks(2, LEVEL2,20, 2)     //L2: 20..21
+            val level3a = getFakeTasks(3, LEVEL3,100, 20)   //L3: 100..101..102
+            val level3b = getFakeTasks(3, LEVEL3,200, 21)   //L3: 200..201..202
+            level1a.map { task -> Log.e(TAG, "-----------------------"+task) }
+            try { db.dao().insert(level1a) }catch (e: Exception){}
+            try { db.dao().insert(level2a) }catch (e: Exception){}
+            try { db.dao().insert(level2b) }catch (e: Exception){}
+            try { db.dao().insert(level3a) }catch (e: Exception){}
+            try { db.dao().insert(level3b) }catch (e: Exception){}
+        }.start()
+
 
         /*Thread {
             Log.e(TAG, "-------------INI")

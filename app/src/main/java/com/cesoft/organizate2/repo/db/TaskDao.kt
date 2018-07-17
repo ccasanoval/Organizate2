@@ -22,10 +22,16 @@ interface TaskDao {
 
     @Query("SELECT * FROM "+TaskTableContract.TABLE_NAME+" WHERE id = :id")
     fun selectById(id: Int) : TaskTable?
-    @Query("SELECT id, idSuper, name, ordering FROM "+TaskTableContract.TABLE_NAME)
+    @Query("SELECT id, idSuper, name, level FROM "+TaskTableContract.TABLE_NAME)
     fun selectRedux() : List<TaskReduxTable>
     @Query("SELECT * FROM "+TaskTableContract.TABLE_NAME)
     fun select() : List<TaskTable>
+
+    @Query("SELECT id, idSuper, name, level FROM "+TaskTableContract.TABLE_NAME)
+    fun selectReduxLive() : LiveData<List<TaskReduxTable>>
+    @Query("SELECT * FROM "+TaskTableContract.TABLE_NAME)
+    fun selectLive() : LiveData<List<TaskTable>>
+
     //@Query("SELECT * FROM TaskTable")
     //fun selectAsync() : LiveData<List<TaskTable>>
 
