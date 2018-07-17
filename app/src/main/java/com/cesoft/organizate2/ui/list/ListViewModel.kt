@@ -1,9 +1,11 @@
 package com.cesoft.organizate2.ui.list
 
-import android.arch.lifecycle.MutableLiveData
+import android.app.Activity
 import com.cesoft.organizate2.ui.base.BaseViewModel
 import javax.inject.Inject
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Observer
 import android.util.Log
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.interactor.GetTaskList
@@ -15,19 +17,22 @@ import com.cesoft.organizate2.interactor.UseCase
  */
 class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : BaseViewModel() {
 
-    private val tasks: MutableLiveData<List<TaskReduxEntity>> = MutableLiveData()
+    private val tasksReady: MutableLiveData<Boolean> = MutableLiveData()
+    private var tasks: LiveData<List<TaskReduxEntity>>? = null
 
-    private fun handleTaskList(tasks: List<TaskReduxEntity>) {
-        Log.e(TAG, "handleTaskList:------------------------------------------------------------"+tasks.size)
-        this.tasks.value = tasks
+    private fun handleTaskList(tasks: LiveData<List<TaskReduxEntity>>) {
+        Log.e(TAG, "handleTaskList:------------------------------------------------------------"+tasks.value?.size)
+        this.tasks = tasks
+        this.tasksReady.value = true
     }
+    //act: Activity, obs: (TaskReduxEntity)
     fun loadTask() {
         Log.e(TAG, "loadTask:------------------------------------------------------------")
         getTasks.execute({ it.either(::handleFailure, ::handleTaskList) }, UseCase.None())
     }
 
-    fun getTasks(): LiveData<List<TaskReduxEntity>> = tasks
-
+    fun getTasks(): LiveData<List<TaskReduxEntity>>? = tasks
+    fun getTasksReady(): LiveData<Boolean> = tasksReady
 
 
     fun onAddTask() {

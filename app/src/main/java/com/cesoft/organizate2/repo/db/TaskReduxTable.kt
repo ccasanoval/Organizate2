@@ -22,14 +22,9 @@ data class TaskReduxTable(
         this.childs.clear()
         this.childs.addAll(childs)
     }
-    /*constructor(task: TaskTable): this(task.id,task.idSuper,task.name,task.) {
-        this.childs.clear()
-        val childs = task.childs.map { it -> TaskReduxTable(it as TaskTable) }
-        this.childs.addAll(childs)
-    }*/
 
     fun toTaskEntity(): TaskReduxEntity {
-        return TaskReduxEntity(id, idSuper, name, level, childs.map{it -> (it as TaskReduxTable).toTaskEntity()})
+        return TaskReduxEntity(id, idSuper, name, level)
     }
 
 }

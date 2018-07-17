@@ -10,7 +10,7 @@ import javax.inject.Inject
  */
 class GetTaskList
 @Inject constructor(private val repo: TaskRepo)
-    : UseCase<List<TaskReduxEntity>, UseCase.None>() {
+    : UseCase<LiveData<List<TaskReduxEntity>>, UseCase.None>() {
 
     override suspend fun run(params: None) = repo.getTasksList()
 }

@@ -4,13 +4,13 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.cesoft.organizate2.App
 import com.cesoft.organizate2.R
+import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL1
 import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL2
 import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL3
@@ -44,11 +44,8 @@ class ListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        //uiTaskList
-
         fab.setOnClickListener { _ ->
             listViewModel.onAddTask()
-            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show()
         }
 
         appComponent.inject(this)
@@ -58,14 +55,17 @@ class ListActivity : AppCompatActivity() {
         listViewModel.failure.observe(this, Observer { failure ->
             Log.e(TAG, "onCreate:e:------------------------------------------------------------"+failure)
         })
-        listViewModel.getTasks().observe(this, Observer { tasks ->
-            Log.e(TAG, "getTasks().observe----------------------------------------------------"+tasks?.size)
-
-            tasks!!.onEach { Log.e(TAG, "ITEM:getTasks().observe:---------------------"+it) }
-            uiTaskList.setAdapter(NivelUnoListAdapter(applicationContext, uiTaskList, tasks!!))
+        listViewModel.getTasksReady().observe(this, Observer {
+            if(it!!)listViewModel.getTasks()?.observe(this, Observer { tasks -> actualizarLista(tasks!!)})
         })
 
         listViewModel.loadTask()
+    }
+
+    fun actualizarLista(tasks: List<TaskReduxEntity>) {
+        Log.e(TAG, "getTasks().observe----------------------------------------------------"+tasks.size)
+        tasks.onEach { Log.e(TAG, "ITEM:getTasks().observe:---------------------"+it) }
+        uiTaskList.setAdapter(NivelUnoListAdapter(applicationContext, uiTaskList, tasks))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -98,15 +98,15 @@ class ListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        listViewModel.loadTask()
-
         Thread {
-            val level1a = getFakeTasks(2, LEVEL1,1)                 //L1: 1..2..3
+            val level1a = getFakeTasks(3, LEVEL1,1)                 //L1: 1..2..3
             val level2a = getFakeTasks(2, LEVEL2,10, 1)     //L2: 10..11..12..13..14
             val level2b = getFakeTasks(2, LEVEL2,20, 2)     //L2: 20..21
             val level3a = getFakeTasks(3, LEVEL3,100, 20)   //L3: 100..101..102
             val level3b = getFakeTasks(3, LEVEL3,200, 21)   //L3: 200..201..202
-            level1a.map { task -> Log.e(TAG, "-----------------------"+task) }
+            level1a.map { task -> Log.e(TAG, "onResume-1a----------------------"+task) }
+            level2a.map { task -> Log.e(TAG, "onResume-2a----------------------"+task) }
+            level2b.map { task -> Log.e(TAG, "onResume-2b----------------------"+task) }
             try { db.dao().insert(level1a) }catch (e: Exception){}
             try { db.dao().insert(level2a) }catch (e: Exception){}
             try { db.dao().insert(level2b) }catch (e: Exception){}

@@ -5,7 +5,6 @@ import android.content.Context
 import com.cesoft.organizate2.App
 import com.cesoft.organizate2.repo.TaskRepo
 import com.cesoft.organizate2.repo.db.Database
-import com.cesoft.organizate2.util.LogInterface
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -19,10 +18,6 @@ class AppModule(private val app: App) {
     @Provides
     @Singleton
     fun provideApplicationContext(): Context = app
-
-    @Provides
-    @Singleton
-    fun provideLog(): LogInterface = LogInterface.Log()
 
     @Provides
     @Singleton
