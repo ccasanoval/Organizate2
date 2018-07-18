@@ -18,19 +18,20 @@ data class TaskReduxEntity(
         val LEVEL1 = 0
         val LEVEL2 = 1
         val LEVEL3 = 2
+        val NONE = Int.None
         val None = TaskReduxEntity(Int.None, Int.None, String.None, Int.None)
 
         fun filterByLevel(list: List<TaskReduxEntity>, level: Int): List<TaskReduxEntity> {
             return list.filter { task -> task.level == level }
         }
 
-        fun filterByParent(list: List<TaskReduxEntity>, idSuper: Int): List<TaskReduxEntity> {
-            return list.filter { task -> task.idSuper == idSuper }//&& LEVEL_SUPER < LEVEL_CHILD
+        internal fun filterByParent(list: List<TaskReduxEntity>, parent: TaskReduxEntity): List<TaskReduxEntity> {
+            return list.filter { task -> task.idSuper == parent.id && task.level > parent.level }
         }
 
         fun createTree(list: List<TaskReduxEntity>): List<TaskReduxEntity> {
             for(task in list)
-                task.childs = ArrayList(filterByParent(list, task.id))
+                task.childs = ArrayList(filterByParent(list, task))
             return list
         }
     }

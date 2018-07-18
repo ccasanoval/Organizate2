@@ -1,8 +1,8 @@
 package com.cesoft.organizate2.interactor
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.cesoft.organizate2.entity.TaskReduxEntity
-import com.cesoft.organizate2.interactor.GetTaskList
-import com.cesoft.organizate2.interactor.UseCase
 import com.cesoft.organizate2.repo.TaskRepo
 import com.cesoft.organizate2.util.functional.Either
 import com.nhaarman.mockito_kotlin.given
@@ -29,7 +29,10 @@ class GetTaskListTest {
     @Before
     fun setUp() {
         getTaskListInteractor = GetTaskList(repo)
-        given { repo.getTasksList() }.willReturn(Either.Right(listOf(TaskReduxEntity.None)))
+        val list = listOf(TaskReduxEntity.None)
+        val mld = MutableLiveData<List<TaskReduxEntity>>()
+        mld.value = list
+        given { repo.getTasksList() }.willReturn(Either.Right(mld))
     }
 
     @Test

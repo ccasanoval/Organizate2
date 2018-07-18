@@ -14,7 +14,7 @@ class TaskReduxTableTest {
     fun toTaskEntityTest() {
         val taskDb1 = TaskReduxTable(1, Int.None, "Tarea 1", 10)
         val taskDb2 = TaskReduxTable(1, Int.None, "Tarea 1", 10)
-        val task = TaskReduxEntity(1, Int.None, "Tarea 1", 10, listOf())
+        val task = TaskReduxEntity(1, Int.None, "Tarea 1", 10)
 
         taskDb2 shouldEqual taskDb1
         task shouldEqual taskDb1.toTaskEntity()
@@ -30,7 +30,7 @@ class TaskReduxTableTest {
 
         val taskDb1 = TaskReduxTable(idParent, Int.None, "Tarea 1", 1, tasks)
         val taskDb2 = TaskReduxTable(idParent, Int.None, "Tarea 1", 1, tasks)
-        val task   = TaskReduxEntity(1, Int.None, "Tarea 1", 1, tasks.map(TaskReduxTable::toTaskEntity))
+        val task   = TaskReduxEntity(1, Int.None, "Tarea 1", 1)
 
         taskDb2 shouldEqual taskDb1
         task shouldEqual taskDb1.toTaskEntity()

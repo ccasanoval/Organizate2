@@ -6,7 +6,7 @@ import com.cesoft.organizate2.repo.db.Database
 import com.cesoft.organizate2.repo.db.TaskDao
 import com.cesoft.organizate2.repo.db.TaskReduxTable
 import com.cesoft.organizate2.repo.db.TaskTable
-import com.cesoft.organizate2.util.LogInterface
+import com.cesoft.organizate2.util.Log
 import com.cesoft.organizate2.util.exception.Failure
 import com.cesoft.organizate2.util.extension.None
 import com.cesoft.organizate2.util.functional.Either
@@ -32,19 +32,18 @@ class TaskRepoTest {
 
     private lateinit var taskRepoDB: TaskRepo.DataBase
 
-    private lateinit var log: LogInterface
     @Mock private lateinit var db: Database
     @Mock private lateinit var dao: TaskDao
 
     @Before
     fun setUp() {
-        log = object : LogInterface {
+        /*log = object : LogInterface {
             override fun e(tag: String, msg: String, t: Throwable?) =
                 System.err.println(tag+" : "+msg+" : "+t)
             override fun d(tag: String, msg: String) =
                 System.err.println(tag+" : "+msg)
-        }
-        taskRepoDB = TaskRepo.DataBase(db, log)
+        }*/
+        taskRepoDB = TaskRepo.DataBase(db)
         given { db.dao() }.willReturn(dao)
     }
 
@@ -65,7 +64,7 @@ class TaskRepoTest {
         given { dao.selectRedux() }.willReturn( listOf(taskDb) )
         val tasks = taskRepoDB.getTasksList()
 
-        //val task = TaskReduxEntity(1, Int.None, "Tarea 1", 10)
+        //val task = TaskReduxEntityTest(1, Int.None, "Tarea 1", 10)
         tasks shouldEqual Either.Right(listOf(taskDb.toTaskEntity()))
         verify(db).dao()
         verify(dao).selectRedux()
@@ -104,7 +103,7 @@ class TaskRepoTest {
         given { dao.selectById(id) }.willReturn(taskDb)
         val task = taskRepoDB.getTaskDetails(id)
 
-        //val task = TaskReduxEntity(1, Int.None, "Tarea 1", 10)
+        //val task = TaskReduxEntityTest(1, Int.None, "Tarea 1", 10)
         task shouldEqual Either.Right(taskDb.toTaskEntity())
         verify(db).dao()
         verify(dao).selectById(id)

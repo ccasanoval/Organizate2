@@ -80,6 +80,7 @@ dependencies {
 
     // Architecture Components
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    testImplementation "android.arch.core:core-testing:$lifecycle_version"
 }
 
 kotlin {
