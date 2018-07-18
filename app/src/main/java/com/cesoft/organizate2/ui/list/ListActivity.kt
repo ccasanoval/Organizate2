@@ -98,22 +98,22 @@ class ListActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        ///DEVELOPING...
         Thread {
             val level1a = getFakeTasks(3, LEVEL1,1)                 //L1: 1..2..3
             val level2a = getFakeTasks(2, LEVEL2,10, 1)     //L2: 10..11..12..13..14
             val level2b = getFakeTasks(2, LEVEL2,20, 2)     //L2: 20..21
             val level3a = getFakeTasks(3, LEVEL3,100, 20)   //L3: 100..101..102
             val level3b = getFakeTasks(3, LEVEL3,200, 21)   //L3: 200..201..202
-            level1a.map { task -> Log.e(TAG, "onResume-1a----------------------"+task) }
-            level2a.map { task -> Log.e(TAG, "onResume-2a----------------------"+task) }
-            level2b.map { task -> Log.e(TAG, "onResume-2b----------------------"+task) }
+            level1a.map { task -> Log.e(TAG, "onResume-1a----------------------$task") }
+            level2a.map { task -> Log.e(TAG, "onResume-2a----------------------$task") }
+            level2b.map { task -> Log.e(TAG, "onResume-2b----------------------$task") }
             try { db.dao().insert(level1a) }catch (e: Exception){}
             try { db.dao().insert(level2a) }catch (e: Exception){}
             try { db.dao().insert(level2b) }catch (e: Exception){}
             try { db.dao().insert(level3a) }catch (e: Exception){}
             try { db.dao().insert(level3b) }catch (e: Exception){}
         }.start()
-
 
         /*Thread {
             Log.e(TAG, "-------------INI")
@@ -143,6 +143,7 @@ class ListActivity : AppCompatActivity() {
             db.dao().insert(task)
 
         }.start()*/
+        ///DEVELOPING...
     }
 
     companion object {

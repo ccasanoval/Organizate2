@@ -53,7 +53,7 @@ class NivelUnoListAdapter(private val _context: Context,
 
     //______________________________________________________________________________________________
     override fun getChild(groupPosition: Int, childPosition: Int): TaskReduxEntity? {
-        return _lista[groupPosition].childs?.get(childPosition)
+        return _lista[groupPosition].Childs[childPosition]
     }
 
     //______________________________________________________________________________________________
@@ -108,8 +108,8 @@ class NivelUnoListAdapter(private val _context: Context,
     //______________________________________________________________________________________________
     private fun createGroupList(seccion: Int): List<Map<String, *>> {
         val result = ArrayList<Map<String, *>>()
-        if(_lista[seccion].childs != null)
-        for(o in _lista[seccion].childs!!) {
+        //if(_lista[seccion].Childs != null)
+        for(o in _lista[seccion].Childs) {
             val m = HashMap<String, String>()
             m[NIVEL2] = o.name
             result.add(m)
@@ -120,11 +120,11 @@ class NivelUnoListAdapter(private val _context: Context,
     //______________________________________________________________________________________________
     private fun createChildList(seccion: Int): List<List<Map<String, String>>> {
         val result = ArrayList<List<Map<String, String>>>()
-        if(_lista[seccion].childs != null)
-        for(o in _lista[seccion].childs!!) {
+        //if(_lista[seccion].Childs != null)
+        for(o in _lista[seccion].Childs) {
             val secList = ArrayList<HashMap<String, String>>()
-            if(o.childs != null)
-            for(o2 in o.childs!!) {
+            //if(o.Childs != null)
+            for(o2 in o.Childs) {
                 val child = HashMap<String, String>()
                 child[NIVEL3] = o2.name
                 secList.add(child)
@@ -175,17 +175,17 @@ class NivelUnoListAdapter(private val _context: Context,
     private fun calculateRowCount(level1: Int, level2view: ExpandableListView?): IntArray {
         val rowCtr = intArrayOf(0, 0, 0)
         if (level2view == null) {
-            if(_lista[level1].childs != null)
-            rowCtr[1] += _lista[level1].childs!!.size
+            //if(_lista[level1].Childs != null)
+            rowCtr[1] += _lista[level1].Childs.size
         } else {
             ++rowCtr[0]
-            val ao = _lista[level1].childs
-            if(ao != null)
+            val ao = _lista[level1].Childs
+            //if(ao != null)
             for(j in ao.indices) {
                 ++rowCtr[1]
                 if (level2view.isGroupExpanded(j))
-                    if(ao[j].childs != null)
-                    rowCtr[2] += ao[j].childs!!.size
+                    //if(ao[j].Childs != null)
+                    rowCtr[2] += ao[j].Childs.size
             }
         }
         //Log.e(TAG,"calculateRowCount---------------------" + level1 + " / " + level2view + "------------" + rowCtr[0]+":"+rowCtr[1]+":"+rowCtr[2] + "::::" + (level2view != null ? level2view.getCount() : 0));

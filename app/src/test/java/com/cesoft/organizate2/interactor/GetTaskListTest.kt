@@ -1,6 +1,5 @@
 package com.cesoft.organizate2.interactor
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.repo.TaskRepo

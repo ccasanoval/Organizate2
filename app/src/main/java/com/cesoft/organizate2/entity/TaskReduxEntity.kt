@@ -12,13 +12,19 @@ data class TaskReduxEntity(
         val name: String,
         val level: Int) {
 
-    var childs: ArrayList<TaskReduxEntity>? = null
+    private var childs: ArrayList<TaskReduxEntity>? = null
+
+    var Childs: List<TaskReduxEntity> = listOf()
+        get() {
+            return if(childs?.toList() == null) listOf()
+                else childs!!.toList()
+        }
 
     companion object {
         val LEVEL1 = 0
         val LEVEL2 = 1
         val LEVEL3 = 2
-        val NONE = Int.None
+        val NO_SUPER = Int.None
         val None = TaskReduxEntity(Int.None, Int.None, String.None, Int.None)
 
         fun filterByLevel(list: List<TaskReduxEntity>, level: Int): List<TaskReduxEntity> {
