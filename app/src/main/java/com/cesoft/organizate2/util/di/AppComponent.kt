@@ -1,6 +1,7 @@
 package com.cesoft.organizate2.util.di
 
 import com.cesoft.organizate2.App
+import com.cesoft.organizate2.ui.item.ItemActivity
 import com.cesoft.organizate2.ui.list.ListActivity
 import dagger.Component
 import javax.inject.Singleton
@@ -13,4 +14,5 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(app: App)
     fun inject(v: ListActivity)
+    fun inject(v: ItemActivity)
 }

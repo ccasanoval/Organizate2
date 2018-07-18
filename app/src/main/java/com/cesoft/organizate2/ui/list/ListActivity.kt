@@ -24,6 +24,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import javax.inject.Inject
 
+/**
+ * Created by ccasanova on 23/05/2018
+ */
 class ListActivity : AppCompatActivity() {
 
     private val appComponent: AppComponent by lazy(mode = LazyThreadSafetyMode.NONE) {
@@ -53,7 +56,7 @@ class ListActivity : AppCompatActivity() {
         listViewModel = ViewModelProviders.of(this, viewModelFactory)[ListViewModel::class.java]
 
         listViewModel.failure.observe(this, Observer { failure ->
-            Log.e(TAG, "onCreate:e:------------------------------------------------------------"+failure)
+            Log.e(TAG, "onCreate:e:----------------------------------------------------$failure")
         })
         listViewModel.getTasksReady().observe(this, Observer {
             if(it!!)listViewModel.getTasks()?.observe(this, Observer { tasks -> actualizarLista(tasks!!)})
@@ -63,8 +66,8 @@ class ListActivity : AppCompatActivity() {
     }
 
     fun actualizarLista(tasks: List<TaskReduxEntity>) {
-        Log.e(TAG, "getTasks().observe----------------------------------------------------"+tasks.size)
-        tasks.onEach { Log.e(TAG, "ITEM:getTasks().observe:---------------------"+it) }
+        //Log.e(TAG, "getTasks().observe----------------------------------------------------"+tasks.size)
+        //tasks.onEach { Log.e(TAG, "ITEM:getTasks().observe:---------------------$it") }
         uiTaskList.setAdapter(NivelUnoListAdapter(applicationContext, uiTaskList, tasks))
     }
 
@@ -79,7 +82,7 @@ class ListActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.config -> true
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -114,35 +117,6 @@ class ListActivity : AppCompatActivity() {
             try { db.dao().insert(level3a) }catch (e: Exception){}
             try { db.dao().insert(level3b) }catch (e: Exception){}
         }.start()
-
-        /*Thread {
-            Log.e(TAG, "-------------INI")
-            val task = db.dao().selectById(696969)
-            if(task == null)
-                Log.e(TAG, "---------------SEGUN LINT ESTO NUNCA OCURRE-------------")
-            Log.e(TAG, "---------------TASK 696969-------------"+task)
-
-        }.start()*/
-
-        /*Thread {
-            Log.e(TAG, "-------------INI")
-
-            var lastId = 0
-            val list = db.dao().select()
-            for(item in list) {
-                Log.e(TAG, "-------------"+item)
-                val item2 = item.toTaskEntity()
-                if(item2.id > lastId)
-                    lastId = item2.id
-            }
-
-            val task = com.cesoft.organizate2.repo.db.TaskTable(
-                    lastId+1, Int.None,
-                    "Tarea "+(lastId+1), "Descripción de la Tarea",
-                    Int.None, Int.None, Int.None, Int.None, Int.None)
-            db.dao().insert(task)
-
-        }.start()*/
         ///DEVELOPING...
     }
 

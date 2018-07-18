@@ -8,6 +8,7 @@ import android.widget.SimpleExpandableListAdapter
 import android.widget.TextView
 import com.cesoft.organizate2.R
 import com.cesoft.organizate2.entity.TaskReduxEntity
+import com.cesoft.organizate2.util.Log
 
 /**
  * Created by ccasanova on 29/05/2018
@@ -30,6 +31,7 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
 
         val txtChild = v.findViewById(R.id.txtNivel3) as TextView
         txtChild.setOnClickListener {
+            Log.e("NivelDos", " ON CLICK **********3***********************${_lista!![_seccion].Childs[groupPosition].Childs[childPosition]}")
             //TODO:
             //val intent = Intent(_context, ActEdit::class.java)
             //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -37,7 +39,7 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
             //_context.startActivity(intent)
         }
 
-        if (_bIniRowHeight3) {
+        if(_bIniRowHeight3) {
             _bIniRowHeight3 = false
             v.measure(android.view.View.MeasureSpec.UNSPECIFIED, android.view.View.MeasureSpec.UNSPECIFIED)
             val height = v.measuredHeight
@@ -53,6 +55,7 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
         /// NIVEL 2 --------------------------------------------------------------------------------
         val btnEditar = v.findViewById(R.id.btnEditarNivel2) as ImageButton
         btnEditar.setOnClickListener {
+            Log.e("NivelDos", " ON CLICK **********2***********************${_lista!![_seccion].Childs[groupPosition]}")
             //TODO:
 //            val intent = Intent(_context, ActEdit::class.java)
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -61,8 +64,7 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
         }
         btnEditar.isFocusable = false//NO HACE CASO EN LAYOUT XML
 
-
-        if (_bIniRowHeight2) {
+        if(_bIniRowHeight2) {
             _bIniRowHeight2 = false
             v.measure(android.view.View.MeasureSpec.UNSPECIFIED, android.view.View.MeasureSpec.UNSPECIFIED)
             val height = v.measuredHeight

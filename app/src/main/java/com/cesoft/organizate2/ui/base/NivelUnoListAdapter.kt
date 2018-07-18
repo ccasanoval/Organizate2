@@ -108,7 +108,6 @@ class NivelUnoListAdapter(private val _context: Context,
     //______________________________________________________________________________________________
     private fun createGroupList(seccion: Int): List<Map<String, *>> {
         val result = ArrayList<Map<String, *>>()
-        //if(_lista[seccion].Childs != null)
         for(o in _lista[seccion].Childs) {
             val m = HashMap<String, String>()
             m[NIVEL2] = o.name
@@ -120,10 +119,8 @@ class NivelUnoListAdapter(private val _context: Context,
     //______________________________________________________________________________________________
     private fun createChildList(seccion: Int): List<List<Map<String, String>>> {
         val result = ArrayList<List<Map<String, String>>>()
-        //if(_lista[seccion].Childs != null)
         for(o in _lista[seccion].Childs) {
             val secList = ArrayList<HashMap<String, String>>()
-            //if(o.Childs != null)
             for(o2 in o.Childs) {
                 val child = HashMap<String, String>()
                 child[NIVEL3] = o2.name
@@ -142,7 +139,7 @@ class NivelUnoListAdapter(private val _context: Context,
                 parent.collapseGroup(groupPosition)
             else
                 parent.expandGroup(groupPosition)
-            if (parent is CexpandableListView) {
+            if(parent is CexpandableListView) {
                 parent.setRows(calculateRowCount(level1GroupPosition, parent))
             }
             _topExpList.requestLayout()
@@ -161,6 +158,7 @@ class NivelUnoListAdapter(private val _context: Context,
         /// NIVEL 1 --------------------------------------------------------------------------------
         val btnEditar = v.findViewById(R.id.btnEditar) as ImageButton
         btnEditar.setOnClickListener {
+            Log.e("NivelUno", " ON CLICK ***********1*********************************${_lista[groupPosition]}")
 //            val intent = Intent(_context, ActEdit::class.java)
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 //            intent.putExtra(TaskReduxEntity::class.java!!.getName(), _lista[groupPosition])
@@ -175,16 +173,14 @@ class NivelUnoListAdapter(private val _context: Context,
     private fun calculateRowCount(level1: Int, level2view: ExpandableListView?): IntArray {
         val rowCtr = intArrayOf(0, 0, 0)
         if (level2view == null) {
-            //if(_lista[level1].Childs != null)
             rowCtr[1] += _lista[level1].Childs.size
-        } else {
+        }
+        else {
             ++rowCtr[0]
             val ao = _lista[level1].Childs
-            //if(ao != null)
             for(j in ao.indices) {
                 ++rowCtr[1]
                 if (level2view.isGroupExpanded(j))
-                    //if(ao[j].Childs != null)
                     rowCtr[2] += ao[j].Childs.size
             }
         }
