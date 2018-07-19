@@ -5,6 +5,7 @@ import com.cesoft.organizate2.util.extension.None
 /**
 * Created by ccasanova on 23/05/2018
 */
+//TODO: Validation...
 data class TaskEntity(
         val id: Int,
         val idSuper: Int,
@@ -18,6 +19,7 @@ data class TaskEntity(
         val childs: List<TaskEntity>) {
 
     companion object {
+        val ID_NIL = Int.None
         val None = TaskEntity(
                 Int.None, Int.None,
                 String.None, Int.None,

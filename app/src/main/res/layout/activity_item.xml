@@ -20,7 +20,7 @@
 			app:popupTheme="@style/AppTheme.PopupOverlay"/>
 	</android.support.design.widget.AppBarLayout>
 
-	<include layout="@layout/content_edit"/>
+	<include layout="@layout/content_item"/>
 
 	<android.support.design.widget.FloatingActionButton
 		android:id="@+id/fab"

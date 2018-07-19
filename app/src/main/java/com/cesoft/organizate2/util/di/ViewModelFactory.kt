@@ -2,6 +2,7 @@ package com.cesoft.organizate2.util.di
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import com.cesoft.organizate2.ui.item.ItemViewModel
 import com.cesoft.organizate2.ui.list.ListViewModel
 import dagger.Binds
 import dagger.MapKey
@@ -38,4 +39,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ListViewModel::class)
     internal abstract fun listViewModel(viewModel: ListViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ItemViewModel::class)
+    internal abstract fun itemViewModel(viewModel: ItemViewModel): ViewModel
 }

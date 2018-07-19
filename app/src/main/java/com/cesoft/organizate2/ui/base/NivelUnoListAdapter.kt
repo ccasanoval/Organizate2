@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.cesoft.organizate2.R
 import com.cesoft.organizate2.entity.TaskReduxEntity
+import com.cesoft.organizate2.ui.list.ListViewModel
 import com.cesoft.organizate2.util.Log
 import java.util.ArrayList
 import java.util.HashMap
@@ -17,17 +18,19 @@ import java.util.HashMap
 /**
  * Created by ccasanova on 29/05/2018
  */
-class NivelUnoListAdapter(private val _context: Context,
-                          private val _topExpList: ExpandableListView,
-                          lista: List<TaskReduxEntity>)
+class NivelUnoListAdapter(
+        private val exContext: Context,
+        private val viewModel: ListViewModel,
+        private val topExpList: ExpandableListView,
+        listaCompleta: List<TaskReduxEntity>)
     : BaseExpandableListAdapter() {
 
-    private val _lista: List<TaskReduxEntity> = TaskReduxEntity.filterByLevel(lista, TaskReduxEntity.LEVEL1)
-    private val _inflater = LayoutInflater.from(_context)
-    private val _listViewCache = ArrayList<CexpandableListView>()
+    private val lista: List<TaskReduxEntity> = TaskReduxEntity.filterByLevel(listaCompleta, TaskReduxEntity.LEVEL1)
+    private val inflater = LayoutInflater.from(exContext)
+    private val listViewCache = ArrayList<CexpandableListView>()
 
     init {
-        NivelDosListAdapter.setLista(_lista)
+        NivelDosListAdapter.setLista(lista)
     }
 
     //______________________________________________________________________________________________
@@ -48,17 +51,17 @@ class NivelUnoListAdapter(private val _context: Context,
 
     //______________________________________________________________________________________________
     override fun getGroup(groupPosition: Int): Any {
-        return _lista[groupPosition].name
+        return lista[groupPosition].name
     }
 
     //______________________________________________________________________________________________
     override fun getChild(groupPosition: Int, childPosition: Int): TaskReduxEntity? {
-        return _lista[groupPosition].Childs[childPosition]
+        return lista[groupPosition].Childs[childPosition]
     }
 
     //______________________________________________________________________________________________
     override fun getGroupCount(): Int {
-        return _lista.size
+        return lista.size
     }
 
     //______________________________________________________________________________________________
@@ -79,10 +82,10 @@ class NivelUnoListAdapter(private val _context: Context,
 
     //______________________________________________________________________________________________
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
-        val dev = CexpandableListView(_context)
+        val dev = CexpandableListView(exContext)
         dev.setRows(calculateRowCount(groupPosition, null))
         dev.setAdapter(NivelDosListAdapter(
-                _context,
+                exContext, viewModel,
                 createGroupList(groupPosition), // groupData describes the first-level entries
                 R.layout.nivel2, // Layout for the first-level entries
                 arrayOf(NIVEL2), // Key in the groupData maps to display
@@ -94,13 +97,13 @@ class NivelUnoListAdapter(private val _context: Context,
                 groupPosition
         ))
         dev.setOnGroupClickListener(Level2GroupExpandListener(groupPosition))
-        if(_listViewCache.size <= groupPosition) {
-            _listViewCache.add(dev)
-            Log.e("NivelUno", "a---------------------------------${_listViewCache.size}-------------------------$groupPosition")
+        if(listViewCache.size <= groupPosition) {
+            listViewCache.add(dev)
+            Log.e("NivelUno", "a---------------------------------${listViewCache.size}-------------------------$groupPosition")
         }
         else {
-            _listViewCache[groupPosition] = dev
-            Log.e("NivelUno", "b---------------------------------${_listViewCache.size}-------------------------$groupPosition")
+            listViewCache[groupPosition] = dev
+            Log.e("NivelUno", "b---------------------------------${listViewCache.size}-------------------------$groupPosition")
         }
         return dev
     }
@@ -108,7 +111,7 @@ class NivelUnoListAdapter(private val _context: Context,
     //______________________________________________________________________________________________
     private fun createGroupList(seccion: Int): List<Map<String, *>> {
         val result = ArrayList<Map<String, *>>()
-        for(o in _lista[seccion].Childs) {
+        for(o in lista[seccion].Childs) {
             val m = HashMap<String, String>()
             m[NIVEL2] = o.name
             result.add(m)
@@ -119,7 +122,7 @@ class NivelUnoListAdapter(private val _context: Context,
     //______________________________________________________________________________________________
     private fun createChildList(seccion: Int): List<List<Map<String, String>>> {
         val result = ArrayList<List<Map<String, String>>>()
-        for(o in _lista[seccion].Childs) {
+        for(o in lista[seccion].Childs) {
             val secList = ArrayList<HashMap<String, String>>()
             for(o2 in o.Childs) {
                 val child = HashMap<String, String>()
@@ -142,14 +145,14 @@ class NivelUnoListAdapter(private val _context: Context,
             if(parent is CexpandableListView) {
                 parent.setRows(calculateRowCount(level1GroupPosition, parent))
             }
-            _topExpList.requestLayout()
+            topExpList.requestLayout()
             return true
         }
     }
 
     //______________________________________________________________________________________________
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
-        val v: View = convertView ?: _inflater.inflate(R.layout.nivel1, parent, false)
+        val v: View = convertView ?: inflater.inflate(R.layout.nivel1, parent, false)
         val gt = getGroup(groupPosition).toString()
         val colorGroup = v.findViewById(R.id.txtNivel1) as TextView
         //if (gt != null)
@@ -158,11 +161,8 @@ class NivelUnoListAdapter(private val _context: Context,
         /// NIVEL 1 --------------------------------------------------------------------------------
         val btnEditar = v.findViewById(R.id.btnEditar) as ImageButton
         btnEditar.setOnClickListener {
-            Log.e("NivelUno", " ON CLICK ***********1*********************************${_lista[groupPosition]}")
-//            val intent = Intent(_context, ActEdit::class.java)
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//            intent.putExtra(TaskReduxEntity::class.java!!.getName(), _lista[groupPosition])
-//            _context.startActivity(intent)
+            Log.e("NivelUno", " ON CLICK ***********1*********************************${lista[groupPosition]}")
+            viewModel.onClickTask(lista[groupPosition].id)
         }
         btnEditar.isFocusable = false//NO HACE CASO EN LAYOUT XML*/
         return v
@@ -173,11 +173,11 @@ class NivelUnoListAdapter(private val _context: Context,
     private fun calculateRowCount(level1: Int, level2view: ExpandableListView?): IntArray {
         val rowCtr = intArrayOf(0, 0, 0)
         if (level2view == null) {
-            rowCtr[1] += _lista[level1].Childs.size
+            rowCtr[1] += lista[level1].Childs.size
         }
         else {
             ++rowCtr[0]
-            val ao = _lista[level1].Childs
+            val ao = lista[level1].Childs
             for(j in ao.indices) {
                 ++rowCtr[1]
                 if (level2view.isGroupExpanded(j))

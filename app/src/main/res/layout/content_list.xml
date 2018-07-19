@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.cesoft.organizate2.ui.list.ListActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_list">
 
     <ExpandableListView
         android:id="@+id/uiTaskList"

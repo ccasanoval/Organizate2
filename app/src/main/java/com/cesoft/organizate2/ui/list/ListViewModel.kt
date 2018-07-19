@@ -15,27 +15,45 @@ import com.cesoft.organizate2.interactor.UseCase
  */
 class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : BaseViewModel() {
 
-    private val tasksReady: MutableLiveData<Boolean> = MutableLiveData()
+    private var view: ListViewInterface? = null
+
     private var tasks: LiveData<List<TaskReduxEntity>>? = null
+    private val tasksReady: MutableLiveData<Boolean> = MutableLiveData()
+        fun getTasks(): LiveData<List<TaskReduxEntity>>? = tasks
+        fun getTasksReady(): LiveData<Boolean> = tasksReady
 
     private fun handleTaskList(tasks: LiveData<List<TaskReduxEntity>>) {
         //Log.e(TAG, "handleTaskList:------------------------------------------------------------"+tasks.value?.size)
         this.tasks = tasks
         this.tasksReady.value = true
     }
-    //act: Activity, obs: (TaskReduxEntity)
     fun loadTask() {
         getTasks.execute({ it.either(::handleFailure, ::handleTaskList) }, UseCase.None())
     }
 
-    fun getTasks(): LiveData<List<TaskReduxEntity>>? = tasks
-    fun getTasksReady(): LiveData<Boolean> = tasksReady
+
 
 
     fun onAddTask() {
         //TODO
         Log.e(TAG, "onAddTask:------------------------------------------------------------")
     }
+
+
+    fun setView(view: ListViewInterface) {
+        this.view = view
+    }
+    fun onClickTask(taskId: Int) {//task: TaskReduxEntity) {
+        Log.e(TAG, "onClickN1:------------------------------------------------------------")
+        view?.startActivity(taskId)
+    }
+    /*fun onClickN2(task: TaskReduxEntity) {
+        Log.e(TAG, "onClickN2:------------------------------------------------------------")
+        view?.startActivity(task)
+    }
+    fun onClickN3(task: TaskReduxEntity) {
+        Log.e(TAG, "onClickN3:------------------------------------------------------------")
+    }*/
 
     companion object {
         val TAG = ListViewModel::class.java.simpleName!!

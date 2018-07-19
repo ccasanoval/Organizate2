@@ -16,7 +16,7 @@ import javax.inject.Inject
  */
 interface TaskRepo {
     fun getTasksList(): Either<Failure, LiveData<List<TaskReduxEntity>>>
-    fun getTaskDetails(id: Int): Either<Failure, TaskEntity>
+    fun getTaskDetails(id: Int): Either<Failure, LiveData<TaskEntity>>
 
     ///---------------------------------------------------------------------------------------------
     //class Network
@@ -40,13 +40,13 @@ interface TaskRepo {
                 Either.Left(Failure.Database())
             }
         }
-        override fun getTaskDetails(id: Int): Either<Failure, TaskEntity> {
+        override fun getTaskDetails(id: Int): Either<Failure, LiveData<TaskEntity>> {
             return try {
-                val taskDb = db.dao().selectById(id)
-                if(taskDb != null)
-                    Either.Right(taskDb.toTaskEntity())
-                else
-                    Either.Left(Failure.TaskIdNotFound())
+                //val taskDb = db.dao().selectById(id)
+                val task0 = db.dao().selectByIdLive(id)
+                val task1 = Transformations.map(task0) { it.toTaskEntity() }
+                Either.Right(task1)
+                //else Either.Left(Failure.TaskIdNotFound())
             }
             catch(e: Exception) {
                 Log.e(TAG, "TaskRepo:DataBase:getTaskDetails:e:--------------------------------",e)

@@ -8,21 +8,26 @@ import android.widget.SimpleExpandableListAdapter
 import android.widget.TextView
 import com.cesoft.organizate2.R
 import com.cesoft.organizate2.entity.TaskReduxEntity
+import com.cesoft.organizate2.ui.list.ListViewModel
 import com.cesoft.organizate2.util.Log
 
 /**
  * Created by ccasanova on 29/05/2018
  */
 
-class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
-                          groupLayout: Int, groupFrom: Array<String>, groupTo: IntArray,
-                          childData: List<List<Map<String, *>>>, childLayout: Int,
-                          childFrom: Array<String>, childTo: IntArray, groupPosition: Int)
+class NivelDosListAdapter(context: Context, private val viewModel: ListViewModel,
+                          groupData: List<Map<String, *>>,
+                          groupLayout: Int,
+                          groupFrom: Array<String>, groupTo: IntArray,
+                          childData: List<List<Map<String, *>>>,
+                          childLayout: Int,
+                          childFrom: Array<String>, childTo: IntArray,
+                          groupPosition: Int)
     : SimpleExpandableListAdapter(context, groupData, groupLayout, groupFrom, groupTo, childData, childLayout, childFrom, childTo) {
-    private var _seccion = 0
+    private var seccion = 0
 
     init {
-        _seccion = groupPosition
+        seccion = groupPosition
     }
 
     /// NIVEL 3 --------------------------------------------------------------------------------
@@ -31,7 +36,8 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
 
         val txtChild = v.findViewById(R.id.txtNivel3) as TextView
         txtChild.setOnClickListener {
-            Log.e("NivelDos", " ON CLICK **********3***********************${_lista!![_seccion].Childs[groupPosition].Childs[childPosition]}")
+            Log.e("NivelDos", " ON CLICK **********3***********************${_lista!![seccion].Childs[groupPosition].Childs[childPosition]}")
+            viewModel.onClickTask(_lista!![seccion].Childs[groupPosition].Childs[childPosition].id)
             //TODO:
             //val intent = Intent(_context, ActEdit::class.java)
             //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -39,8 +45,8 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
             //_context.startActivity(intent)
         }
 
-        if(_bIniRowHeight3) {
-            _bIniRowHeight3 = false
+        if(isIniRowHeight3) {
+            isIniRowHeight3 = false
             v.measure(android.view.View.MeasureSpec.UNSPECIFIED, android.view.View.MeasureSpec.UNSPECIFIED)
             val height = v.measuredHeight
             CexpandableListView.setRowHeight3(height)
@@ -55,7 +61,8 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
         /// NIVEL 2 --------------------------------------------------------------------------------
         val btnEditar = v.findViewById(R.id.btnEditarNivel2) as ImageButton
         btnEditar.setOnClickListener {
-            Log.e("NivelDos", " ON CLICK **********2***********************${_lista!![_seccion].Childs[groupPosition]}")
+            Log.e("NivelDos", " ON CLICK **********2***********************${_lista!![seccion].Childs[groupPosition]}")
+            viewModel.onClickTask(_lista!![seccion].Childs[groupPosition].id)
             //TODO:
 //            val intent = Intent(_context, ActEdit::class.java)
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -64,8 +71,8 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
         }
         btnEditar.isFocusable = false//NO HACE CASO EN LAYOUT XML
 
-        if(_bIniRowHeight2) {
-            _bIniRowHeight2 = false
+        if(isIniRowHeight2) {
+            isIniRowHeight2 = false
             v.measure(android.view.View.MeasureSpec.UNSPECIFIED, android.view.View.MeasureSpec.UNSPECIFIED)
             val height = v.measuredHeight
             CexpandableListView.setRowHeight2(height)
@@ -81,8 +88,8 @@ class NivelDosListAdapter(context: Context, groupData: List<Map<String, *>>,
             _lista = lista
         }
 
-        private var _bIniRowHeight2 = true
-        private var _bIniRowHeight3 = true
+        private var isIniRowHeight2 = true
+        private var isIniRowHeight3 = true
     }
 }
 

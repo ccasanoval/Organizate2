@@ -1,5 +1,6 @@
 package com.cesoft.organizate2.interactor
 
+import android.arch.lifecycle.LiveData
 import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.repo.TaskRepo
@@ -10,7 +11,7 @@ import javax.inject.Inject
  */
 class GetTaskDetails
 @Inject constructor(private val repo: TaskRepo)
-    : UseCase<TaskEntity, Int>() {
+    : UseCase<LiveData<TaskEntity>, Int>() {
 
     override suspend fun run(params: Int) = repo.getTaskDetails(params)
 }
