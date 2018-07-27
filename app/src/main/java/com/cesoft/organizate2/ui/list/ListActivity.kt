@@ -13,9 +13,9 @@ import com.cesoft.organizate2.App
 import com.cesoft.organizate2.R
 import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity
-import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL1
-import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL2
-import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL3
+import com.cesoft.organizate2.entity.Task.LEVEL1
+import com.cesoft.organizate2.entity.Task.LEVEL2
+import com.cesoft.organizate2.entity.Task.LEVEL3
 import com.cesoft.organizate2.repo.db.Database
 import com.cesoft.organizate2.repo.db.TaskTable
 import com.cesoft.organizate2.ui.base.NivelUnoListAdapter
@@ -69,8 +69,6 @@ class ListActivity : AppCompatActivity(), ListViewInterface {
     }
 
     fun updateTaskList(tasks: List<TaskReduxEntity>) {
-        //Log.e(TAG, "getTasks().observe----------------------------------------------------"+tasks.size)
-        //tasks.onEach { Log.e(TAG, "ITEM:getTasks().observe:---------------------$it") }
         uiTaskList.setAdapter(NivelUnoListAdapter(applicationContext, listViewModel, uiTaskList, tasks))
     }
 

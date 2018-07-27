@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
@@ -9,22 +8,28 @@
 	android:paddingLeft="@dimen/activity_horizontal_margin"
 	android:paddingRight="@dimen/activity_horizontal_margin"
 	android:paddingTop="@dimen/activity_vertical_margin"
-	app:layout_behavior="@string/appbar_scrolling_view_behavior"
 	tools:context="com.cesoft.organizate2.ui.item.ItemActivity"
+	app:layout_behavior="@string/appbar_scrolling_view_behavior"
 	tools:showIn="@layout/activity_item">
 
 	<android.support.design.widget.TextInputLayout
 		android:id="@+id/layNombre"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		>
+		android:layout_marginEnd="8dp"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toTopOf="parent">
+
 		<AutoCompleteTextView
 			android:id="@+id/txtNombre"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/nombre"
 			android:inputType="text"
-			android:maxLines="1"/>
+			android:maxLines="1" />
 	</android.support.design.widget.TextInputLayout>
 
 	<android.support.design.widget.TextInputLayout
@@ -32,87 +37,112 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_below="@+id/layNombre"
-		>
+		android:layout_marginEnd="8dp"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/layNombre">
+
 		<AutoCompleteTextView
 			android:id="@+id/txtDescripcion"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:hint="@string/descripcion"
 			android:inputType="textMultiLine"
-			android:maxLines="3"/>
+			android:maxLines="3" />
 	</android.support.design.widget.TextInputLayout>
 
 	<TextView
 		android:id="@+id/lbPrioridad"
-		android:layout_below="@+id/layDescripcion"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentStart="true"
+		android:layout_below="@+id/layDescripcion"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="15dp"
 		android:text="@string/prioridad"
-		/>
+		app:layout_constraintStart_toStartOf="@+id/layDescripcion"
+		app:layout_constraintTop_toBottomOf="@+id/layDescripcion" />
+
 	<RatingBar
 		android:id="@+id/rbPrioridad"
-		android:layout_below="@+id/lbPrioridad"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginTop="5dp"
+		android:layout_below="@+id/lbPrioridad"
 		android:layout_centerHorizontal="true"
+		android:layout_marginEnd="8dp"
+		android:layout_marginStart="8dp"
 		android:numStars="5"
-        android:stepSize="1.0"
-		/>
+		android:stepSize="1.0"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/lbPrioridad" />
 
 	<Button
 		android:id="@+id/btnPadre"
-		android:layout_below="@+id/rbPrioridad"
+		style="@style/btnStyle"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_below="@+id/rbPrioridad"
 		android:layout_centerHorizontal="true"
-		android:layout_marginTop="5dp"
-		style="@style/btnStyle"
+		android:layout_marginEnd="8dp"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="15dp"
 		android:text="@string/nodo_padre"
-		/>
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/rbPrioridad" />
 
 	<LinearLayout
-		android:layout_below="@+id/btnPadre"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:layout_below="@+id/btnPadre"
 		android:layout_centerHorizontal="true"
-		android:layout_marginTop="25dp"
-		>
+		android:layout_marginBottom="8dp"
+		android:layout_marginEnd="8dp"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="8dp"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintEnd_toEndOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/btnPadre">
+
 		<ImageButton
 			android:id="@+id/btnEliminar"
+			style="@style/btnStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="10dp"
-			style="@style/btnStyle"
-			android:src="@android:drawable/ic_menu_delete"
-			android:contentDescription="@string/eliminar"/>
+			android:contentDescription="@string/eliminar"
+			android:src="@android:drawable/ic_menu_delete" />
 
 		<ImageButton
 			android:id="@+id/btnHablar"
+			style="@style/btnStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="10dp"
-			style="@style/btnStyle"
-			android:src="@android:drawable/ic_menu_help"
-			android:contentDescription="@string/leer"/>
+			android:contentDescription="@string/leer"
+			android:src="@android:drawable/ic_menu_help" />
 
 		<ImageButton
 			android:id="@+id/btnAviso"
+			style="@style/btnStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="10dp"
-			style="@style/btnStyle"
-			android:src="@android:drawable/ic_menu_today"
-			android:contentDescription="@string/aviso"/>
+			android:contentDescription="@string/aviso"
+			android:src="@android:drawable/ic_menu_today" />
 
 		<ImageButton
 			android:id="@+id/btnAvisoGeo"
+			style="@style/btnStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginEnd="10dp"
-			style="@style/btnStyle"
-			android:src="@android:drawable/ic_menu_mapmode"
-			android:contentDescription="@string/aviso"/>
+			android:contentDescription="@string/aviso"
+			android:src="@android:drawable/ic_menu_mapmode" />
 	</LinearLayout>
-</RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

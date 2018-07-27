@@ -77,5 +77,6 @@
     <string name="error_carga_lista">Error while loading tasks list</string>
     <string name="cargando">Loading…</string>
     <string name="max_num_items">Maximum number of items reached</string>
+    <string name="no_task_with_super_level">There is no task with superior level that this</string>
 
 </resources>

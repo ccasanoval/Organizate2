@@ -15,8 +15,7 @@ abstract class TaskTableBase(
     val childs: ArrayList<TaskTableBase> = ArrayList()
 
     fun filterChilds(tasks: List<TaskTableBase>) : List<TaskTableBase> {
-        val list = tasks.filter { task -> task.idSuper == id && task.id != id }
-        return list
+        return tasks.filter { task -> task.idSuper == id && task.id != id }
     }
     fun initChilds(tasks: List<TaskTableBase>) {
         childs.clear()

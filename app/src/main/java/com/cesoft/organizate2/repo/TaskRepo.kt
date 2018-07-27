@@ -26,7 +26,6 @@ interface TaskRepo {
     @Inject constructor(private val db: Database)
         : TaskRepo {
 
-        //TODO: Use LiveData !!
         override fun getTasksList(): Either<Failure, LiveData<List<TaskReduxEntity>>> {
             return try {
                 val tasks0 : LiveData<List<TaskReduxTable>> = db.dao().selectReduxLive()
@@ -43,10 +42,10 @@ interface TaskRepo {
         override fun getTaskDetails(id: Int): Either<Failure, LiveData<TaskEntity>> {
             return try {
                 //val taskDb = db.dao().selectById(id)
+                Log.e(TAG, "getTaskDetails:----------------------------------$id")
                 val task0 = db.dao().selectByIdLive(id)
                 val task1 = Transformations.map(task0) { it.toTaskEntity() }
                 Either.Right(task1)
-                //else Either.Left(Failure.TaskIdNotFound())
             }
             catch(e: Exception) {
                 Log.e(TAG, "TaskRepo:DataBase:getTaskDetails:e:--------------------------------",e)

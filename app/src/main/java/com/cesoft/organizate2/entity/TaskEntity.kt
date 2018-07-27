@@ -19,9 +19,8 @@ data class TaskEntity(
         val childs: List<TaskEntity>) {
 
     companion object {
-        val ID_NIL = Int.None
         val None = TaskEntity(
-                Int.None, Int.None,
+                Task.ID_NIL, Task.NO_SUPER,
                 String.None, Int.None,
                 String.None, Int.None,
                 Long.None, Long.None, Long.None,

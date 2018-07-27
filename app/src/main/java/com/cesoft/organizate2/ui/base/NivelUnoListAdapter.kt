@@ -9,6 +9,7 @@ import android.widget.ExpandableListView
 import android.widget.ImageButton
 import android.widget.TextView
 import com.cesoft.organizate2.R
+import com.cesoft.organizate2.entity.Task
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.ui.list.ListViewModel
 import com.cesoft.organizate2.util.Log
@@ -25,7 +26,7 @@ class NivelUnoListAdapter(
         listaCompleta: List<TaskReduxEntity>)
     : BaseExpandableListAdapter() {
 
-    private val lista: List<TaskReduxEntity> = TaskReduxEntity.filterByLevel(listaCompleta, TaskReduxEntity.LEVEL1)
+    private val lista: List<TaskReduxEntity> = TaskReduxEntity.filterByLevel(listaCompleta, Task.LEVEL1)
     private val inflater = LayoutInflater.from(exContext)
     private val listViewCache = ArrayList<CexpandableListView>()
 
@@ -56,7 +57,7 @@ class NivelUnoListAdapter(
 
     //______________________________________________________________________________________________
     override fun getChild(groupPosition: Int, childPosition: Int): TaskReduxEntity? {
-        return lista[groupPosition].Childs[childPosition]
+        return lista[groupPosition].childs[childPosition]
     }
 
     //______________________________________________________________________________________________
@@ -111,7 +112,7 @@ class NivelUnoListAdapter(
     //______________________________________________________________________________________________
     private fun createGroupList(seccion: Int): List<Map<String, *>> {
         val result = ArrayList<Map<String, *>>()
-        for(o in lista[seccion].Childs) {
+        for(o in lista[seccion].childs) {
             val m = HashMap<String, String>()
             m[NIVEL2] = o.name
             result.add(m)
@@ -122,9 +123,9 @@ class NivelUnoListAdapter(
     //______________________________________________________________________________________________
     private fun createChildList(seccion: Int): List<List<Map<String, String>>> {
         val result = ArrayList<List<Map<String, String>>>()
-        for(o in lista[seccion].Childs) {
+        for(o in lista[seccion].childs) {
             val secList = ArrayList<HashMap<String, String>>()
-            for(o2 in o.Childs) {
+            for(o2 in o.childs) {
                 val child = HashMap<String, String>()
                 child[NIVEL3] = o2.name
                 secList.add(child)
@@ -173,15 +174,15 @@ class NivelUnoListAdapter(
     private fun calculateRowCount(level1: Int, level2view: ExpandableListView?): IntArray {
         val rowCtr = intArrayOf(0, 0, 0)
         if (level2view == null) {
-            rowCtr[1] += lista[level1].Childs.size
+            rowCtr[1] += lista[level1].childs.size
         }
         else {
             ++rowCtr[0]
-            val ao = lista[level1].Childs
+            val ao = lista[level1].childs
             for(j in ao.indices) {
                 ++rowCtr[1]
                 if (level2view.isGroupExpanded(j))
-                    rowCtr[2] += ao[j].Childs.size
+                    rowCtr[2] += ao[j].childs.size
             }
         }
         //Log.e(TAG,"calculateRowCount---------------------" + level1 + " / " + level2view + "------------" + rowCtr[0]+":"+rowCtr[1]+":"+rowCtr[2] + "::::" + (level2view != null ? level2view.getCount() : 0));
