@@ -103,7 +103,7 @@ class ListActivity : AppCompatActivity(), ListViewInterface {
         super.onResume()
 
         ///DEVELOPING...
-        Thread {
+        /*Thread {
             val level1a = getFakeTasks(3, LEVEL1,1)                 //L1: 1..2..3
             val level2a = getFakeTasks(2, LEVEL2,10, 1)     //L2: 10..11..12..13..14
             val level2b = getFakeTasks(2, LEVEL2,20, 2)     //L2: 20..21
@@ -112,12 +112,13 @@ class ListActivity : AppCompatActivity(), ListViewInterface {
             level1a.map { task -> Log.e(TAG, "onResume-1a----------------------$task") }
             level2a.map { task -> Log.e(TAG, "onResume-2a----------------------$task") }
             level2b.map { task -> Log.e(TAG, "onResume-2b----------------------$task") }
+            try { db.dao().nukeTable() }catch (e: Exception){}
             try { db.dao().insert(level1a) }catch (e: Exception){}
             try { db.dao().insert(level2a) }catch (e: Exception){}
             try { db.dao().insert(level2b) }catch (e: Exception){}
             try { db.dao().insert(level3a) }catch (e: Exception){}
             try { db.dao().insert(level3b) }catch (e: Exception){}
-        }.start()
+        }.start()*/
         ///DEVELOPING...
     }
 

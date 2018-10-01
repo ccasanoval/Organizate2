@@ -5,8 +5,7 @@ import com.cesoft.organizate2.util.extension.None
 object Task {
     val ID_NIL = Int.None
     val NO_SUPER = Int.None
-
-    val LEVEL1 = 0
-    val LEVEL2 = 1
-    val LEVEL3 = 2
+    const val LEVEL1 = 0
+    const val LEVEL2 = 1
+    const val LEVEL3 = 2
 }

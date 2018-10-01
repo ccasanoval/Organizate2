@@ -32,14 +32,12 @@ class ItemActivity : AppCompatActivity() {
         (application as App).appComponent
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    @Inject
-    lateinit var db: Database
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var db: Database
 
     private lateinit var itemViewModel: ItemViewModel
-
     private var superPopupWindow : PopupWindow? = null
+    //private var idSuper: Int = Task.ID_NIL
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +64,8 @@ class ItemActivity : AppCompatActivity() {
             itemViewModel.getTasks()?.observe(this, Observer { _ -> updateParentName() })
         })
 
+        itemViewModel.finish.observe(this, Observer { finish() })
+
         //intent.getParcelableExtra<Parcelable>(Objeto::class.java!!.getName())
         val idTask = intent.getIntExtra(TaskEntity::class.java.simpleName, Task.ID_NIL)
         if(idTask == Task.ID_NIL) {
@@ -86,7 +86,7 @@ class ItemActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_item, menu)
         return true
     }
 
@@ -97,6 +97,10 @@ class ItemActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.home -> {
                 onBackPressed()
+                true
+            }
+            R.id.action_save -> {
+                save()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -113,17 +117,10 @@ class ItemActivity : AppCompatActivity() {
         super.onResume()
     }
 
-    /*private fun updateTasks(tasks: List<TaskReduxEntity>) {
-        Log.e(TAG, "updateTasks:------------------------TASKS-----------------------${tasks.size}")
-        tasksList = tasks
-    }*/
     private fun updateTask(task: TaskEntity) {
-        Log.e(TAG, "updateTask:------------------------TASK-----------${rbPrioridad.numStars}-----priority--${task.priority}----- $task  ")
         txtNombre.setText(task.name)
         txtDescripcion.setText(task.description)
-        rbPrioridad.numStars = task.priority
-        rbPrioridad.numStars = 4
-        //TODO:
+        rbPrioridad.rating = task.priority.toFloat()
     }
 
     private fun updateParentName() {
@@ -160,8 +157,8 @@ class ItemActivity : AppCompatActivity() {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
                 val listItem = TextView(this@ItemActivity)
-                listItem.text = getItem(position).name
-                listItem.tag = getItem(position).id
+                listItem.text = getItem(position)?.name
+                listItem.tag = getItem(position)?.id
                 listItem.textSize = 22f
                 listItem.setPadding(10, 10, 10, 10)
                 listItem.setTextColor(Color.WHITE)
@@ -184,18 +181,23 @@ class ItemActivity : AppCompatActivity() {
 
             // get the text and set it as the button text
             val id = getItemSelectedId((v as TextView).text.toString())
-            /*String selectedItemText = ((TextView)v).getText().toString();
-			selectedItemText = selectedItemText.replace(HIJO, "").replace(PADRE, "");*/
             btnPadre.text = id
             // get the id
             itemViewModel.setIdSuper(v.getTag() as Int)
         }
     }
 
+    private fun save() {
+        itemViewModel.save(
+                txtNombre.text.toString(),
+                txtDescripcion.text.toString(),
+                rbPrioridad.rating.toInt())
+    }
+
     companion object {
         val TAG: String = ItemActivity::class.simpleName!!
-        private val PADRE = "+ "
-        private val HIJO = "   - "
+        private const val PADRE = "+ "
+        private const val HIJO = "   - "
         fun getItemSelectedId(txt: String): String {
             return txt.replace(HIJO, "").replace(PADRE, "")
         }

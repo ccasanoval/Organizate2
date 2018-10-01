@@ -19,17 +19,19 @@ interface TaskDao {
 
     @Delete
     fun delete(task: TaskTable)
+    @Query("DELETE FROM ${TaskTableContract.TABLE_NAME}")
+    fun nukeTable()
 
-    @Query("SELECT * FROM "+TaskTableContract.TABLE_NAME+" WHERE id = :id")
+    @Query("SELECT * FROM ${TaskTableContract.TABLE_NAME} WHERE id = :id")
     fun selectById(id: Int) : TaskTable?
-    @Query("SELECT id, idSuper, name, level FROM "+TaskTableContract.TABLE_NAME)
+    @Query("SELECT id, idSuper, name, level FROM ${TaskTableContract.TABLE_NAME}")
     fun selectRedux() : List<TaskReduxTable>
-    @Query("SELECT * FROM "+TaskTableContract.TABLE_NAME)
+    @Query("SELECT * FROM ${TaskTableContract.TABLE_NAME}")
     fun select() : List<TaskTable>
 
-    @Query("SELECT id, idSuper, name, level FROM "+TaskTableContract.TABLE_NAME)
+    @Query("SELECT id, idSuper, name, level FROM ${TaskTableContract.TABLE_NAME}")
     fun selectReduxLive() : LiveData<List<TaskReduxTable>>
-    @Query("SELECT * FROM "+TaskTableContract.TABLE_NAME+" WHERE id = :id")
+    @Query("SELECT * FROM ${TaskTableContract.TABLE_NAME} WHERE id = :id")
     fun selectByIdLive(id: Int) : LiveData<TaskTable>
 
     //@Query("SELECT * FROM TaskTable")

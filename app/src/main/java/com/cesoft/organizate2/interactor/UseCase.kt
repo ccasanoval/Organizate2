@@ -18,6 +18,7 @@ import kotlinx.coroutines.experimental.launch
  * By convention each [UseCase] implementation will execute its job in a background thread
  * (kotlin coroutine) and will post the result in the UI thread.
  */
+//TODO: https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md
 abstract class UseCase<out Type, in Params> where Type : Any {
 
     abstract suspend fun run(params: Params): Either<Failure, Type>
@@ -25,6 +26,11 @@ abstract class UseCase<out Type, in Params> where Type : Any {
     fun execute(onResult: (Either<Failure, Type>) -> Unit, params: Params) {
         val job = async(CommonPool) { run(params) }
         launch(UI) { onResult.invoke(job.await()) }
+    }
+
+    operator fun invoke(params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
+        val job = async(CommonPool) { run(params) }
+        launch(UI) { onResult(job.await()) }
     }
 
     class None

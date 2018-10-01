@@ -9,6 +9,7 @@ import com.cesoft.organizate2.ui.base.BaseViewModel
 import com.cesoft.organizate2.util.Log
 import com.cesoft.organizate2.interactor.GetTaskDetails
 import com.cesoft.organizate2.interactor.GetTaskList
+import com.cesoft.organizate2.interactor.SaveTaskDetails
 import com.cesoft.organizate2.interactor.UseCase
 import javax.inject.Inject
 
@@ -16,13 +17,18 @@ import javax.inject.Inject
 /**
  * Created by ccasanova on 17/08/2018
  */
-class ItemViewModel @Inject constructor(private val getTasks: GetTaskList, private val getTask: GetTaskDetails) : BaseViewModel() {
+class ItemViewModel @Inject constructor(
+        private val getTasks: GetTaskList,
+        private val getTask: GetTaskDetails,
+        private val saveTask: SaveTaskDetails
+) : BaseViewModel() {
 
     private var isNew : Boolean = true
     //private var taskId: Int = TaskEntity.ID_NIL
 
+    val finish: MutableLiveData<Boolean> = MutableLiveData()
     private var task: LiveData<TaskEntity>? = null
-    private var tasks: LiveData<List<TaskReduxEntity>>? = null//TODO:Needed?
+    private var tasks: LiveData<List<TaskReduxEntity>>? = null
     private val taskReady: MutableLiveData<Boolean> = MutableLiveData()
     private val tasksReady: MutableLiveData<Boolean> = MutableLiveData()//TODO:Needed?
     private val parentName: MutableLiveData<String> = MutableLiveData()
@@ -32,8 +38,11 @@ class ItemViewModel @Inject constructor(private val getTasks: GetTaskList, priva
     fun getTasksReady(): LiveData<Boolean> = tasksReady
     //fun getParentName(): LiveData<String> = parentName
 
+    private var idSuper: Int = Task.NO_SUPER
+
     fun setIdSuper(idSuper: Int) {
         //task?.value.let { it.idSuper = idSuper }
+        this.idSuper = idSuper
         Log.e(TAG, "setIdSuper:------------------------------------------------$idSuper")
     }
 
@@ -70,7 +79,7 @@ class ItemViewModel @Inject constructor(private val getTasks: GetTaskList, priva
     fun getNameById() : String? {
         if(task?.value?.idSuper == Task.ID_NIL)return null
         task?.value?.idSuper?.let { id ->
-            tasks?.value?.let {
+            tasks?.value?.let { it ->
                 try {
                     return it
                             .filter { it.id == id }
@@ -86,43 +95,44 @@ class ItemViewModel @Inject constructor(private val getTasks: GetTaskList, priva
     }
 
     fun getTaskSupers() : Array<TaskReduxEntity>? {
-        tasks?.value?.let {
-            try {
-                return it
-                        .filter { it.level <= Task.LEVEL2 }//TODO: && it.id != this.task.id
+        tasks?.value?.let { it ->
+            return try {
+                it
+                        .filter { it.level <= Task.LEVEL2 }
                         .toTypedArray()
             }
             catch(e: Exception) {
                 Log.e(TAG, "getTaskSupers:e:------------------${it.size}", e)
-                return null
+                null
             }
         }
         return null
     }
-    /* Solo superiores actuales : No puedes meter debajo de otro...
-    fun getTaskSupers() : Array<TaskReduxEntity>? {
-        task?.value?.level?.let { level ->
-            tasks?.value?.let {
-                try {
-                    return it
-                            .filter { it.level < level }
-                            .toTypedArray()
-                }
-                catch(e: Exception) {
-                    Log.e(TAG, "getTaskSupers:e:------------------${it.size}", e)
-                    return null
-                }
-            }
-        }
-        return null
-    }*/
-
 
     fun newTask() {
         isNew = true
     }
 
+    fun save(name: String, description: String, priority: Int) {
+        val newTask = TaskEntity(
+                task!!.value!!.id,
+                idSuper,
+                name,
+                task!!.value!!.level,
+                description,
+                priority,
+                task!!.value!!.limit,
+                task!!.value!!.created,
+                task!!.value!!.modified,
+                List(0) {TaskEntity.None}
+        )
+        Log.e(TAG, "SAVE:------$priority--------------------$newTask ")
+        saveTask.execute({it ->
+            it.either(::handleFailure){finish.value = true; Unit}
+        }, newTask)
+    }
+
     companion object {
-        val TAG = ItemViewModel::class.java.simpleName!!
+        val TAG: String = ItemViewModel::class.java.simpleName
     }
 }

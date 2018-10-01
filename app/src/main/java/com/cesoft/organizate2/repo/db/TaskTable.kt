@@ -40,6 +40,13 @@ data class TaskTable(
         this.childs.addAll(childs)
     }
 
+    constructor(task: TaskEntity)
+            : this(task.id, task.idSuper, task.name, task.level, task.description, task.priority,
+            task.limit, task.created, task.modified) {
+        this.childs.clear()
+        this.childs.addAll(childs)
+    }
+
     fun toTaskEntity(): TaskEntity {
         return TaskEntity(id, idSuper, name, level, description, priority, limit,
                 created, modified, childs.map { it -> (it as TaskTable).toTaskEntity() })

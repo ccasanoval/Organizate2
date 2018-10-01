@@ -1,5 +1,6 @@
 package com.cesoft.organizate2.entity
 
+import android.arch.persistence.room.PrimaryKey
 import com.cesoft.organizate2.util.extension.None
 
 /**
@@ -7,6 +8,7 @@ import com.cesoft.organizate2.util.extension.None
 */
 //TODO: Validation...
 data class TaskEntity(
+        @PrimaryKey(autoGenerate = true)
         val id: Int,
         val idSuper: Int,
         val name: String,
