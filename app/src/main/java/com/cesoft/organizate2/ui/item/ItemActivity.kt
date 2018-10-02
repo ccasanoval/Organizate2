@@ -1,5 +1,6 @@
 package com.cesoft.organizate2.ui.item
 
+import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -53,17 +54,11 @@ class ItemActivity : AppCompatActivity() {
         itemViewModel = ViewModelProviders.of(this, viewModelFactory)[ItemViewModel::class.java]
 
         itemViewModel.failure.observe(this, Observer { failure ->
-            Log.e(TAG, "onCreate:e:----------------------------------------------------$failure")
+            Log.e(TAG, "onCreate:e:----------------------------------------------------: $failure")
         })
 
-        itemViewModel.getTaskReady().observe(this, Observer {
-            itemViewModel.getTask()?.observe(this, Observer { task -> updateTask(task!!)})
-        })
-
-        itemViewModel.getTasksReady().observe(this, Observer {
-            itemViewModel.getTasks()?.observe(this, Observer { _ -> updateParentName() })
-        })
-
+        itemViewModel.task.observe(this, Observer { task -> updateTask(task!!)})
+        itemViewModel.tasks.observe(this, Observer { _ -> updateParentName() })
         itemViewModel.finish.observe(this, Observer { finish() })
 
         //intent.getParcelableExtra<Parcelable>(Objeto::class.java!!.getName())
@@ -74,7 +69,7 @@ class ItemActivity : AppCompatActivity() {
         else {
             itemViewModel.loadTask(idTask)
         }
-        Log.e(TAG, "onCreate:-----------------------------ID TASK-----------------------$idTask")
+        Log.e(TAG, "onCreate:-----------------------------ID TASK-----------------------: $idTask")
 
         btnPadre.setOnClickListener {
             superPopupWindow = popupPadre()
@@ -136,6 +131,7 @@ class ItemActivity : AppCompatActivity() {
 
         val listData = itemViewModel.getTaskSupers()
         listData?.let {
+            Log.e(TAG, "---2------------------------------------- ${listData.size}")
             list.adapter = padreAdapter(it)
             list.onItemClickListener = PadreDropdownOnItemClickListener()
             // some other visual settings
@@ -154,15 +150,21 @@ class ItemActivity : AppCompatActivity() {
     //______________________________________________________________________________________________
     private fun padreAdapter(padreArray: Array<TaskReduxEntity>): ArrayAdapter<TaskReduxEntity> {
         return object : ArrayAdapter<TaskReduxEntity>(this, android.R.layout.simple_list_item_1, padreArray) {
+            @SuppressLint("SetTextI18n")
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-
                 val listItem = TextView(this@ItemActivity)
-                listItem.text = getItem(position)?.name
-                listItem.tag = getItem(position)?.id
+                var prefix = ""
+                val task = getItem(position)!!
+                when(task.level) {
+                    Task.LEVEL1 -> prefix = " "
+                    Task.LEVEL2 -> prefix = "    "
+                    Task.LEVEL3 -> prefix = "       "
+                }
+                listItem.text = "$prefix${task.name}"
+                listItem.tag = getItem(position)//getItem(position)?.id
                 listItem.textSize = 22f
                 listItem.setPadding(10, 10, 10, 10)
                 listItem.setTextColor(Color.WHITE)
-
                 return listItem
             }
         }
@@ -180,10 +182,13 @@ class ItemActivity : AppCompatActivity() {
             superPopupWindow?.dismiss()
 
             // get the text and set it as the button text
-            val id = getItemSelectedId((v as TextView).text.toString())
-            btnPadre.text = id
+            btnPadre.text = (v as TextView).text.toString().trim()
             // get the id
-            itemViewModel.setIdSuper(v.getTag() as Int)
+            v.getTag().let { it ->
+                val task: TaskReduxEntity = it as TaskReduxEntity
+                itemViewModel.setIdSuper(task.id)
+                itemViewModel.setLevel(Task.levelChildOf(task.level))
+            }
         }
     }
 
@@ -196,10 +201,10 @@ class ItemActivity : AppCompatActivity() {
 
     companion object {
         val TAG: String = ItemActivity::class.simpleName!!
-        private const val PADRE = "+ "
-        private const val HIJO = "   - "
-        fun getItemSelectedId(txt: String): String {
-            return txt.replace(HIJO, "").replace(PADRE, "")
-        }
+        //private const val PADRE = "+ "
+        //private const val HIJO = "   - "
+        //fun getItemSelectedId(txt: String): String {
+        //    return txt.replace(HIJO, "").replace(PADRE, "")
+        //}
     }
 }

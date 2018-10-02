@@ -13,15 +13,10 @@ import com.cesoft.organizate2.App
 import com.cesoft.organizate2.R
 import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity
-import com.cesoft.organizate2.entity.Task.LEVEL1
-import com.cesoft.organizate2.entity.Task.LEVEL2
-import com.cesoft.organizate2.entity.Task.LEVEL3
 import com.cesoft.organizate2.repo.db.Database
-import com.cesoft.organizate2.repo.db.TaskTable
 import com.cesoft.organizate2.ui.base.NivelUnoListAdapter
 import com.cesoft.organizate2.ui.item.ItemActivity
 import com.cesoft.organizate2.util.di.AppComponent
-import com.cesoft.organizate2.util.extension.None
 
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.content_list.*
@@ -57,13 +52,11 @@ class ListActivity : AppCompatActivity(), ListViewInterface {
         listViewModel.failure.observe(this, Observer { failure ->
             Log.e(TAG, "onCreate:e:----------------------------------------------------$failure")
         })
-        listViewModel.getTasksReady().observe(this, Observer {
-            if(it!!)listViewModel.getTasks()?.observe(this, Observer { tasks -> updateTaskList(tasks!!)})
-        })
 
-        listViewModel.loadTask()
+        listViewModel.tasks.observe(this, Observer { tasks -> updateTaskList(tasks!!)})
+
         listViewModel.setView(this)
-        fab.setOnClickListener { _ ->
+        fabNewTask.setOnClickListener { _ ->
             listViewModel.onAddTask()
         }
     }
@@ -88,19 +81,9 @@ class ListActivity : AppCompatActivity(), ListViewInterface {
         }
     }
 
-    private fun getFakeTasks(size: Int, level: Int, idFrom: Int, idParent: Int = Int.None): List<TaskTable> {
-        val list = ArrayList<TaskTable>()
-        for(i in idFrom until idFrom+size) {
-            val task = TaskTable(i, idParent, "Title $i",
-                    level,"Desc $i",
-                    5, System.currentTimeMillis()+10*60*60*1000,
-                    System.currentTimeMillis(), System.currentTimeMillis())
-            list.add(task)
-        }
-        return list
-    }
     override fun onResume() {
         super.onResume()
+        listViewModel.loadTask()
 
         ///DEVELOPING...
         /*Thread {
@@ -121,11 +104,22 @@ class ListActivity : AppCompatActivity(), ListViewInterface {
         }.start()*/
         ///DEVELOPING...
     }
+    /* private fun getFakeTasks(size: Int, level: Int, idFrom: Int, idParent: Int = Int.None): List<TaskTable> {
+        val list = ArrayList<TaskTable>()
+        for(i in idFrom until idFrom+size) {
+            val task = TaskTable(i, idParent, "Title $i",
+                    level,"Desc $i",
+                    5, System.currentTimeMillis()+10*60*60*1000,
+                    System.currentTimeMillis(), System.currentTimeMillis())
+            list.add(task)
+        }
+        return list
+    }*/
 
-    override fun startActivity(taskId: Int) {//task: TaskReduxEntity) {
+    override fun startActivity(taskId: Int) {
         val intent = Intent(this, ItemActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        intent.putExtra(TaskEntity::class.java.simpleName, taskId)//task.id)
+        intent.putExtra(TaskEntity::class.java.simpleName, taskId)
         startActivity(intent)
     }
 

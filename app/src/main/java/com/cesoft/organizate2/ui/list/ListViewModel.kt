@@ -2,9 +2,9 @@ package com.cesoft.organizate2.ui.list
 
 import com.cesoft.organizate2.ui.base.BaseViewModel
 import javax.inject.Inject
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
+import com.cesoft.organizate2.entity.Task
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.interactor.GetTaskList
 import com.cesoft.organizate2.interactor.UseCase
@@ -17,25 +17,19 @@ class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : Bas
 
     private var view: ListViewInterface? = null
 
-    private var tasks: LiveData<List<TaskReduxEntity>>? = null
-    private val tasksReady: MutableLiveData<Boolean> = MutableLiveData()
-        fun getTasks(): LiveData<List<TaskReduxEntity>>? = tasks
-        fun getTasksReady(): LiveData<Boolean> = tasksReady
+    val tasks: MutableLiveData<List<TaskReduxEntity>> = MutableLiveData()
 
-    private fun handleTaskList(tasks: LiveData<List<TaskReduxEntity>>) {
+    private fun handleTaskList(tasks: List<TaskReduxEntity>) {
         //Log.e(TAG, "handleTaskList:------------------------------------------------------------"+tasks.value?.size)
-        this.tasks = tasks
-        this.tasksReady.value = true
+        this.tasks.value = tasks
     }
     fun loadTask() {
         getTasks.execute({ it.either(::handleFailure, ::handleTaskList) }, UseCase.None())
     }
 
 
-
-
     fun onAddTask() {
-        //TODO
+        view?.startActivity(Task.ID_NIL)
         Log.e(TAG, "onAddTask:------------------------------------------------------------")
     }
 
@@ -43,19 +37,12 @@ class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : Bas
     fun setView(view: ListViewInterface) {
         this.view = view
     }
-    fun onClickTask(taskId: Int) {//task: TaskReduxEntity) {
+    fun onClickTask(taskId: Int) {
         Log.e(TAG, "onClickN1:------------------------------------------------------------")
         view?.startActivity(taskId)
     }
-    /*fun onClickN2(task: TaskReduxEntity) {
-        Log.e(TAG, "onClickN2:------------------------------------------------------------")
-        view?.startActivity(task)
-    }
-    fun onClickN3(task: TaskReduxEntity) {
-        Log.e(TAG, "onClickN3:------------------------------------------------------------")
-    }*/
 
     companion object {
-        val TAG = ListViewModel::class.java.simpleName!!
+        val TAG : String = ListViewModel::class.java.simpleName
     }
 }

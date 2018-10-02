@@ -1,7 +1,7 @@
 package com.cesoft.organizate2.repo
 
 import com.cesoft.organizate2.entity.TaskReduxEntity
-import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL1
+import com.cesoft.organizate2.entity.Task.LEVEL1
 import com.cesoft.organizate2.repo.db.Database
 import com.cesoft.organizate2.repo.db.TaskDao
 import com.cesoft.organizate2.repo.db.TaskReduxTable
@@ -36,12 +36,6 @@ class TaskRepoTest {
 
     @Before
     fun setUp() {
-        /*log = object : LogInterface {
-            override fun e(tag: String, msg: String, t: Throwable?) =
-                System.err.println(tag+" : "+msg+" : "+t)
-            override fun d(tag: String, msg: String) =
-                System.err.println(tag+" : "+msg)
-        }*/
         taskRepoDB = TaskRepo.DataBase(db)
         given { db.dao() }.willReturn(dao)
     }

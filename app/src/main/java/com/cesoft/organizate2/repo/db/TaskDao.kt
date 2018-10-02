@@ -1,6 +1,5 @@
 package com.cesoft.organizate2.repo.db
 
-import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.Dao
 
@@ -29,10 +28,10 @@ interface TaskDao {
     @Query("SELECT * FROM ${TaskTableContract.TABLE_NAME}")
     fun select() : List<TaskTable>
 
-    @Query("SELECT id, idSuper, name, level FROM ${TaskTableContract.TABLE_NAME}")
-    fun selectReduxLive() : LiveData<List<TaskReduxTable>>
-    @Query("SELECT * FROM ${TaskTableContract.TABLE_NAME} WHERE id = :id")
-    fun selectByIdLive(id: Int) : LiveData<TaskTable>
+    //@Query("SELECT id, idSuper, name, level FROM ${TaskTableContract.TABLE_NAME}")
+    //fun selectReduxLive() : LiveData<List<TaskReduxTable>>
+    //@Query("SELECT * FROM ${TaskTableContract.TABLE_NAME} WHERE id = :id")
+    //fun selectByIdLive(id: Int) : LiveData<TaskTable>
 
     //@Query("SELECT * FROM TaskTable")
     //fun selectAsync() : LiveData<List<TaskTable>>

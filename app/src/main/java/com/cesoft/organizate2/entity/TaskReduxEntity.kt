@@ -36,5 +36,21 @@ data class TaskReduxEntity(
                 task._childs = ArrayList(filterByParent(list, task))
             return list
         }
+
+        fun orderTree(list: List<TaskReduxEntity>): List<TaskReduxEntity> {
+            val res = ArrayList<TaskReduxEntity>()
+            for(task1 in list) {
+                if(task1.level == Task.LEVEL1) {
+                    res.add(task1)
+                    for(task2 in task1.childs) {
+                        res.add(task2)
+                        for(task3 in task2.childs) {
+                            res.add(task3)
+                        }
+                    }
+                }
+            }
+            return res
+        }
     }
 }

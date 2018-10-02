@@ -1,15 +1,13 @@
 package com.cesoft.organizate2.repo.db
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL1
+import com.cesoft.organizate2.entity.Task.LEVEL1
 import com.cesoft.organizate2.util.extension.None
 import org.junit.Assert.*
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.ArrayList

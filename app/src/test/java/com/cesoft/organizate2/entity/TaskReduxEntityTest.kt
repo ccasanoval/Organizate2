@@ -36,7 +36,7 @@ class TaskReduxEntityTest {
         }
         return list
     }*/
-    private fun getFakeTasks(size: Int, level: Int, idFrom: Int, idSuper: Int = TaskReduxEntity.NO_SUPER): List<TaskReduxEntity> {
+    private fun getFakeTasks(size: Int, level: Int, idFrom: Int, idSuper: Int = Task.NO_SUPER): List<TaskReduxEntity> {
         val list = ArrayList<TaskReduxEntity>()
         for(i in idFrom until idFrom+size) {
             val task = TaskReduxEntity(i, idSuper, "Title $i", level)
@@ -47,16 +47,16 @@ class TaskReduxEntityTest {
 
     @Before
     fun setUp() {
-        val taskListLevel_1 = getFakeTasks(4, TaskReduxEntity.LEVEL1, 1)
+        val taskListLevel_1 = getFakeTasks(4, Task.LEVEL1, 1)
         //
-        val taskListLevel_2_1a = getFakeTasks(4, TaskReduxEntity.LEVEL2, 10,1)
-        val taskListLevel_2_1b = getFakeTasks(3, TaskReduxEntity.LEVEL2, 20,2)
-        val taskListLevel_2_1c = getFakeTasks(1, TaskReduxEntity.LEVEL2, 30,3)
+        val taskListLevel_2_1a = getFakeTasks(4, Task.LEVEL2, 10,1)
+        val taskListLevel_2_1b = getFakeTasks(3, Task.LEVEL2, 20,2)
+        val taskListLevel_2_1c = getFakeTasks(1, Task.LEVEL2, 30,3)
         //
-        val taskListLevel_3_2a_1a = getFakeTasks(2, TaskReduxEntity.LEVEL3, 100,10)
-        val taskListLevel_3_2b_1a = getFakeTasks(3, TaskReduxEntity.LEVEL3, 200,11)
-        val taskListLevel_3_2a_1b = getFakeTasks(2, TaskReduxEntity.LEVEL3, 300,20)
-        val taskListLevel_3_2b_1b = getFakeTasks(3, TaskReduxEntity.LEVEL3, 400,21)
+        val taskListLevel_3_2a_1a = getFakeTasks(2, Task.LEVEL3, 100,10)
+        val taskListLevel_3_2b_1a = getFakeTasks(3, Task.LEVEL3, 200,11)
+        val taskListLevel_3_2a_1b = getFakeTasks(2, Task.LEVEL3, 300,20)
+        val taskListLevel_3_2b_1b = getFakeTasks(3, Task.LEVEL3, 400,21)
         //
         //      1(task1)                               2                                    3      4
         //      10        11            12     13      20(t2)    21(t3)          22(t4)     30
@@ -80,9 +80,9 @@ class TaskReduxEntityTest {
 
     @Test
     fun `should filter by level`() {
-        val listLevel1 = TaskReduxEntity.filterByLevel(taskList, TaskReduxEntity.LEVEL1)
-        val listLevel2 = TaskReduxEntity.filterByLevel(taskList, TaskReduxEntity.LEVEL2)
-        val listLevel3 = TaskReduxEntity.filterByLevel(taskList, TaskReduxEntity.LEVEL3)
+        val listLevel1 = TaskReduxEntity.filterByLevel(taskList, Task.LEVEL1)
+        val listLevel2 = TaskReduxEntity.filterByLevel(taskList, Task.LEVEL2)
+        val listLevel3 = TaskReduxEntity.filterByLevel(taskList, Task.LEVEL3)
 
         assert(taskList.size == 22)
 
@@ -157,24 +157,24 @@ class TaskReduxEntityTest {
     fun `should create a tree`() {
         val tree = TaskReduxEntity.createTree(taskList)
 
-        assert(task1.Childs.size == 4)
-        assert(task2.Childs.size == 2)
-        assert(task3.Childs.size == 3)
-        assert(task4.Childs.isEmpty())
-        assert(task5.Childs.isEmpty())
+        assert(task1.childs.size == 4)
+        assert(task2.childs.size == 2)
+        assert(task3.childs.size == 3)
+        assert(task4.childs.isEmpty())
+        assert(task5.childs.isEmpty())
 
-        assert(task1.Childs[0].Childs.size == 2)
-        assert(task1.Childs[0].Childs[0].id == 100)
+        assert(task1.childs[0].childs.size == 2)
+        assert(task1.childs[0].childs[0].id == 100)
 
-        assert(task3.Childs.size == 3)
-        assert(task3.Childs[2] == task5)
+        assert(task3.childs.size == 3)
+        assert(task3.childs[2] == task5)
 
-        assert(tree[1].Childs[1].Childs[2] == task5)
+        assert(tree[1].childs[1].childs[2] == task5)
 
         for(task in tree) {
             //if(task.idSuper != TaskReduxEntity.NO_SUPER) {
-            if(task.Childs.isNotEmpty()) {
-                for(childTask in task.Childs)
+            if(task.childs.isNotEmpty()) {
+                for(childTask in task.childs)
                     assert(childTask.idSuper == task.id)
             }
         }

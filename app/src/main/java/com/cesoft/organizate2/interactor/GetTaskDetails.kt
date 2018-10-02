@@ -11,7 +11,7 @@ import javax.inject.Inject
  */
 class GetTaskDetails
 @Inject constructor(private val repo: TaskRepo)
-    : UseCase<LiveData<TaskEntity>, Int>() {
+    : UseCase<TaskEntity, Int>() {
 
     override suspend fun run(params: Int) = repo.getTaskDetails(params)
 }

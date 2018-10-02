@@ -29,9 +29,7 @@ class GetTaskListTest {
     fun setUp() {
         getTaskListInteractor = GetTaskList(repo)
         val list = listOf(TaskReduxEntity.None)
-        val mld = MutableLiveData<List<TaskReduxEntity>>()
-        mld.value = list
-        given { repo.getTasksList() }.willReturn(Either.Right(mld))
+        given { repo.getTasksList() }.willReturn(Either.Right(list))
     }
 
     @Test

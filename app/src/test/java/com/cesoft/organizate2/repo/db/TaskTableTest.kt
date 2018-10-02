@@ -1,7 +1,7 @@
 package com.cesoft.organizate2.repo.db
 
+import com.cesoft.organizate2.entity.Task.LEVEL1
 import com.cesoft.organizate2.entity.TaskEntity
-import com.cesoft.organizate2.entity.TaskReduxEntity.Companion.LEVEL1
 import com.cesoft.organizate2.util.extension.None
 import org.amshove.kluent.shouldEqual
 import org.junit.Test
