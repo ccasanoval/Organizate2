@@ -20,6 +20,10 @@ data class TaskEntity(
         val modified: Long,
         val childs: List<TaskEntity>) {
 
+    fun toTaskReduxEntity() : TaskReduxEntity {
+        return TaskReduxEntity(id, idSuper, name, level)
+    }
+
     companion object {
         val None = TaskEntity(
                 Task.ID_NIL, Task.NO_SUPER,

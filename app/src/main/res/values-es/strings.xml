@@ -84,6 +84,15 @@
 	<string name="cargando">Cargando…</string>
 	<string name="guardar">Guardar</string>
 	<string name="max_num_items">Alcanzado máximo número de elementos</string>
+    <string name="no_task_with_super_level">No hay tareas con nivel superior a actual</string>
+	<string name="error_task_not_found">No se encontró la tarea</string>
+	<string name="error_database">Error en la base de datos</string>
+	<string name="error_feature">Error en una función</string>
+	<string name="error_unexpected">Error inesperado</string>
+	<string name="ask_sure_delete">Seguro que desea eliminar?</string>
+	<string name="delete_task">Eliminar tarea</string>
+	<string name="yes">Sí</string>
+	<string name="cancel">Cancelar</string>
 
 
 </resources>

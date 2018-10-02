@@ -4,12 +4,9 @@ import android.arch.lifecycle.MutableLiveData
 import com.cesoft.organizate2.entity.Task
 import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity
+import com.cesoft.organizate2.interactor.*
 import com.cesoft.organizate2.ui.base.BaseViewModel
 import com.cesoft.organizate2.util.Log
-import com.cesoft.organizate2.interactor.GetTaskDetails
-import com.cesoft.organizate2.interactor.GetTaskList
-import com.cesoft.organizate2.interactor.SaveTaskDetails
-import com.cesoft.organizate2.interactor.UseCase
 import javax.inject.Inject
 
 
@@ -19,7 +16,8 @@ import javax.inject.Inject
 class ItemViewModel @Inject constructor(
         private val getTasks: GetTaskList,
         private val getTask: GetTaskDetails,
-        private val saveTask: SaveTaskDetails
+        private val saveTask: SaveTaskDetails,
+        private val deleteTask: DeleteTaskDetails
 ) : BaseViewModel() {
 
 
@@ -51,7 +49,8 @@ class ItemViewModel @Inject constructor(
         getTask.execute({ it.either(::handleFailure, ::handleTask) }, taskId)
     }
     private fun handleTasks(tasks: List<TaskReduxEntity>) {
-        Log.e(TAG, "handleTasks:-------------------------------------------------$tasks")
+        Log.e(TAG, "handleTasks:-------------------------------------------------TASKS $tasks")
+        Log.e(TAG, "handleTasks:-------------------------------------------------SIZE ${tasks.size}")
         this.tasks.value = tasks
         Log.e(TAG, "handleTasks:-----------------------------parentName-----------------------${this.parentName.value}")
     }
@@ -95,6 +94,22 @@ class ItemViewModel @Inject constructor(
 
     fun newTask() {
         loadTasks()
+    }
+
+    fun delete() {
+        task.value?.let { thisTask ->
+            // Delete children
+            val childs: List<TaskReduxEntity> = TaskReduxEntity.filterByParent(tasks.value!!, thisTask.toTaskReduxEntity())
+            for(childTask in childs) {
+                deleteTask.execute({ it ->
+                    it.either({}) { finish.value = true; Unit }
+                }, childTask.toTaskEntity())
+            }
+            // Delete task
+            deleteTask.execute({ it ->
+                it.either(::handleFailure) { finish.value = true; Unit }
+            }, thisTask)
+        }
     }
 
     fun save(name: String, description: String, priority: Int) {

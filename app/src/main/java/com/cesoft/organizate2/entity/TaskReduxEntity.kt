@@ -20,6 +20,10 @@ data class TaskReduxEntity(
                 else _childs!!.toList()
         }
 
+    fun toTaskEntity() : TaskEntity {
+        return TaskEntity(id, idSuper, name, level, "",0,0,0,0, listOf())
+    }
+
     companion object {
         val None = TaskReduxEntity(Int.None, Int.None, String.None, Int.None)
 

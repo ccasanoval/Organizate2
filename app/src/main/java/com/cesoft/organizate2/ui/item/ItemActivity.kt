@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.*
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.content_item.*
 import android.view.animation.AnimationUtils
 import android.widget.*
 import com.cesoft.organizate2.entity.Task
+import com.cesoft.organizate2.util.exception.Failure
 
 
 /**
@@ -47,14 +49,19 @@ class ItemActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         appComponent.inject(this)
 
-        Log.e(TAG, "onCreate:---------------------0000000000000000-------------------------------")
-
-
         //listViewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)-->Sin dagger
         itemViewModel = ViewModelProviders.of(this, viewModelFactory)[ItemViewModel::class.java]
 
         itemViewModel.failure.observe(this, Observer { failure ->
             Log.e(TAG, "onCreate:e:----------------------------------------------------: $failure")
+            //TODO: Toast
+            val msg = when(failure) {
+                is Failure.TaskIdNotFound -> getString(R.string.error_task_not_found)
+                is Failure.Database -> getString(R.string.error_database)
+                is Failure.FeatureFailure -> getString(R.string.error_feature)
+                else -> getString(R.string.error_unexpected)
+            }
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
         })
 
         itemViewModel.task.observe(this, Observer { task -> updateTask(task!!)})
@@ -77,6 +84,7 @@ class ItemActivity : AppCompatActivity() {
         }
 
         fab.setOnClickListener { _ -> onBackPressed() }
+        btnEliminar.setOnClickListener { _ -> onEliminar() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -91,6 +99,7 @@ class ItemActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.home -> {
+                //TODO: Check if dirty and ask for saving
                 onBackPressed()
                 true
             }
@@ -199,12 +208,21 @@ class ItemActivity : AppCompatActivity() {
                 rbPrioridad.rating.toInt())
     }
 
+    private fun onEliminar() {
+        val builder = AlertDialog.Builder(this)
+        builder
+                .setTitle(getString(R.string.delete_task))
+                .setMessage(getString(R.string.ask_sure_delete))
+                .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                    itemViewModel.delete()
+                }
+                .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .show()
+    }
+
     companion object {
         val TAG: String = ItemActivity::class.simpleName!!
-        //private const val PADRE = "+ "
-        //private const val HIJO = "   - "
-        //fun getItemSelectedId(txt: String): String {
-        //    return txt.replace(HIJO, "").replace(PADRE, "")
-        //}
     }
 }

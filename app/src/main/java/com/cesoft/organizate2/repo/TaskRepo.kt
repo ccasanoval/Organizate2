@@ -17,6 +17,7 @@ interface TaskRepo {
     fun getTasksList(): Either<Failure, List<TaskReduxEntity>>
     fun getTaskDetails(id: Int): Either<Failure, TaskEntity>
     fun saveTasksDetails(task: TaskEntity): Either<Failure, Unit>
+    fun deleteTasksDetails(task: TaskEntity): Either<Failure, Unit>
 
     ///---------------------------------------------------------------------------------------------
     //class Network
@@ -50,7 +51,7 @@ interface TaskRepo {
             }
         }
 
-        override fun saveTasksDetails(task: TaskEntity): Either<Failure, Unit>  {
+        override fun saveTasksDetails(task: TaskEntity): Either<Failure, Unit> {
             return try {
                 if(task.id == Task.ID_NIL)
                     db.dao().insert(TaskTable(task))
@@ -60,6 +61,17 @@ interface TaskRepo {
             }
             catch(e: Exception) {
                 Log.e(TAG, "TaskRepo:DataBase:saveTasksDetails:e:------------------------------",e)
+                Either.Left(Failure.Database())
+            }
+        }
+
+        override fun deleteTasksDetails(task: TaskEntity): Either<Failure, Unit> {
+            return try {
+                db.dao().delete(TaskTable(task))
+                Either.Right(Unit)
+            }
+            catch(e: Exception) {
+                Log.e(TAG, "TaskRepo:DataBase:deleteTasksDetails:e:----------------------------",e)
                 Either.Left(Failure.Database())
             }
         }
