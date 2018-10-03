@@ -36,7 +36,7 @@ class NivelDosListAdapter(context: Context, private val viewModel: ListViewModel
 
         val txtChild = v.findViewById(R.id.txtNivel3) as TextView
         txtChild.setOnClickListener {
-            Log.e("NivelDos", " ON CLICK **********3***********************${_lista!![seccion].childs[groupPosition].childs[childPosition]}")
+            //Log.e("NivelDos", " ON CLICK **********3***********************${_lista!![seccion].childs[groupPosition].childs[childPosition]}")
             viewModel.onClickTask(_lista!![seccion].childs[groupPosition].childs[childPosition].id)
             //TODO:
             //val intent = Intent(_context, ActEdit::class.java)
@@ -61,7 +61,7 @@ class NivelDosListAdapter(context: Context, private val viewModel: ListViewModel
         /// NIVEL 2 --------------------------------------------------------------------------------
         val btnEditar = v.findViewById(R.id.btnEditarNivel2) as ImageButton
         btnEditar.setOnClickListener {
-            Log.e("NivelDos", " ON CLICK **********2***********************${_lista!![seccion].childs[groupPosition]}")
+            //Log.e("NivelDos", " ON CLICK **********2***********************${_lista!![seccion].childs[groupPosition]}")
             viewModel.onClickTask(_lista!![seccion].childs[groupPosition].id)
             //TODO:
 //            val intent = Intent(_context, ActEdit::class.java)

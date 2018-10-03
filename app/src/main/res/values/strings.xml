@@ -30,7 +30,6 @@
     <string name="fec_modificado">Modified</string>
     <string name="fec_limite">Due time</string>
 
-    <string name="seguro_eliminar">Are you sure you want to delete it?</string>
     <string name="sintareas">No tasks</string>
 
     <string name="lunes">Mo</string>
@@ -81,9 +80,12 @@
     <string name="error_feature">Feature error</string>
     <string name="error_unexpected">Unexpected error</string>
 
-    <string name="ask_sure_delete">Are you sure you want to delete this?</string>
-    <string name="delete_task">Delete task</string>
     <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="cancel">Cancel</string>
+    <string name="ask_sure_delete">Are you sure you want to delete this?</string>
+    <string name="title_sure_delete">Delete task</string>
+    <string name="ask_exit_save">Task changed. Do you want to save it?</string>
+    <string name="title_exit_save">Save task</string>
 
 </resources>

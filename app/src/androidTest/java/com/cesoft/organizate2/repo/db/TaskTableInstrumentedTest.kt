@@ -189,3 +189,94 @@ class TaskTableInstrumentedTest {
     }
 
 }
+
+/*
+
+import android.arch.persistence.room.Room;
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+
+/**
+ * Created by ccasanova on 03/10/2018.
+ */
+@RunWith(AndroidJUnit4.class)
+public class CMRDatabaseTest {
+    private CMRDao mCMRDao;
+    private CMRDatabase mDb;
+
+    @Before
+    public void createDb() {
+        Context context = InstrumentationRegistry.getTargetContext();
+        mDb = Room.inMemoryDatabaseBuilder(context, CMRDatabase.class).build();
+        mCMRDao = mDb.dao();
+    }
+
+    @After
+    public void closeDb() throws IOException {
+        mDb.close();
+    }
+
+    @Test
+    public void writeCMRAndRead() throws Exception {
+        String name = "User Name";
+        String cmr = "CMR Id";
+        CMREntity entity = new CMREntity(69, new Date(), name, cmr, 1);
+        mCMRDao.insert(entity);
+        CMREntity entityRes = mCMRDao.select(name, cmr);
+        assertThat(entityRes, equalTo(entity));
+    }
+
+    @Test
+    public void setSigned() throws Exception {
+        String name = "User Name";
+        String cmr = "CMR Id";
+        CMREntity entity = new CMREntity(69, new Date(), name, cmr, 0);
+        mCMRDao.insert(entity);
+        mCMRDao.setSigned(entity.getUid());
+        CMREntity entityRes = mCMRDao.select(name, cmr);
+        assertThat(entityRes.isSigned(), equalTo(true));
+    }
+
+    @Test
+    public void clear() throws Exception {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -2);
+        Date date1 = calendar.getTime();
+        calendar.add(Calendar.MONTH, -1);
+        Date date2 = calendar.getTime();
+
+        String name1 = "User Name1";
+        String cmr1 = "CMR Id1";
+        CMREntity entity1 = new CMREntity(69, date1, name1, cmr1, 0);
+        mCMRDao.insert(entity1);
+
+        String name2 = "User Name2";
+        String cmr2 = "CMR Id2";
+        CMREntity entity2 = new CMREntity(70, date2, name2, cmr2, 0);
+        mCMRDao.insert(entity2);
+
+        mCMRDao.clear(new Date());
+
+        CMREntity entityRes1 = mCMRDao.select(name1, cmr1);
+        assertThat(entityRes1, equalTo(null));
+
+        CMREntity entityRes2 = mCMRDao.select(name2, cmr2);
+        assertThat(entityRes2, equalTo(entity2));
+    }
+}
+
+* */

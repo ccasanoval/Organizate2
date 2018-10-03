@@ -30,7 +30,7 @@ class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : Bas
 
     fun onAddTask() {
         view?.startActivity(Task.ID_NIL)
-        Log.e(TAG, "onAddTask:------------------------------------------------------------")
+        //Log.e(TAG, "onAddTask:------------------------------------------------------------")
     }
 
 
@@ -38,7 +38,7 @@ class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : Bas
         this.view = view
     }
     fun onClickTask(taskId: Int) {
-        Log.e(TAG, "onClickN1:------------------------------------------------------------")
+        //Log.e(TAG, "onClickN1:------------------------------------------------------------")
         view?.startActivity(taskId)
     }
 

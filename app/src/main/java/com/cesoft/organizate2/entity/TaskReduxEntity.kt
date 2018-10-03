@@ -24,6 +24,19 @@ data class TaskReduxEntity(
         return TaskEntity(id, idSuper, name, level, "",0,0,0,0, listOf())
     }
 
+    fun isChild(task: TaskEntity?) : Boolean {
+        if(task == null)
+            return false
+        if(id == task.idSuper)
+            return true
+        if(childs.isEmpty())
+            return false
+        for(child in childs)
+            if(child.isChild(task))
+                return true
+        return false
+    }
+
     companion object {
         val None = TaskReduxEntity(Int.None, Int.None, String.None, Int.None)
 

@@ -12,7 +12,6 @@ import com.cesoft.organizate2.R
 import com.cesoft.organizate2.entity.Task
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.ui.list.ListViewModel
-import com.cesoft.organizate2.util.Log
 import java.util.ArrayList
 import java.util.HashMap
 
@@ -100,11 +99,11 @@ class NivelUnoListAdapter(
         dev.setOnGroupClickListener(Level2GroupExpandListener(groupPosition))
         if(listViewCache.size <= groupPosition) {
             listViewCache.add(dev)
-            Log.e("NivelUno", "a---------------------------------${listViewCache.size}-------------------------$groupPosition")
+            //Log.e("NivelUno", "a---------------------------------${listViewCache.size}-------------------------$groupPosition")
         }
         else {
             listViewCache[groupPosition] = dev
-            Log.e("NivelUno", "b---------------------------------${listViewCache.size}-------------------------$groupPosition")
+            //Log.e("NivelUno", "b---------------------------------${listViewCache.size}-------------------------$groupPosition")
         }
         return dev
     }
@@ -162,7 +161,7 @@ class NivelUnoListAdapter(
         /// NIVEL 1 --------------------------------------------------------------------------------
         val btnEditar = v.findViewById(R.id.btnEditar) as ImageButton
         btnEditar.setOnClickListener {
-            Log.e("NivelUno", " ON CLICK ***********1*********************************${lista[groupPosition]}")
+            //Log.e("NivelUno", " ON CLICK ***********1*********************************${lista[groupPosition]}")
             viewModel.onClickTask(lista[groupPosition].id)
         }
         btnEditar.isFocusable = false//NO HACE CASO EN LAYOUT XML*/
@@ -190,7 +189,7 @@ class NivelUnoListAdapter(
     }
 
     companion object {
-        private val NIVEL2 = "NIVEL2"
-        private val NIVEL3 = "NIVEL3"
+        private const val NIVEL2 = "NIVEL2"
+        private const val NIVEL3 = "NIVEL3"
     }
 }

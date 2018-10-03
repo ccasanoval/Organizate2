@@ -8,6 +8,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import com.cesoft.organizate2.App
@@ -38,7 +40,7 @@ class ItemActivity : AppCompatActivity() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var db: Database
 
-    private lateinit var itemViewModel: ItemViewModel
+    private lateinit var viewModel: ItemViewModel
     private var superPopupWindow : PopupWindow? = null
     //private var idSuper: Int = Task.ID_NIL
 
@@ -49,42 +51,85 @@ class ItemActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         appComponent.inject(this)
 
-        //listViewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)-->Sin dagger
-        itemViewModel = ViewModelProviders.of(this, viewModelFactory)[ItemViewModel::class.java]
+        observeViewModel()
+        getTaskFromCaller()
+        initButtons()
+        initFields()
+    }
 
-        itemViewModel.failure.observe(this, Observer { failure ->
-            Log.e(TAG, "onCreate:e:----------------------------------------------------: $failure")
-            //TODO: Toast
-            val msg = when(failure) {
-                is Failure.TaskIdNotFound -> getString(R.string.error_task_not_found)
-                is Failure.Database -> getString(R.string.error_database)
-                is Failure.FeatureFailure -> getString(R.string.error_feature)
-                else -> getString(R.string.error_unexpected)
+    private fun initFields() {
+        txtNombre.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                /*if(s.toString() != viewModel.task.value?.name)
+                    viewModel.isDirty = true*/
+                checkDirtyFlag()
+                Log.e(TAG, "txtNombre.addTextChangedListener-------------------------------------"+viewModel.isDirty)
             }
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
         })
-
-        itemViewModel.task.observe(this, Observer { task -> updateTask(task!!)})
-        itemViewModel.tasks.observe(this, Observer { _ -> updateParentName() })
-        itemViewModel.finish.observe(this, Observer { finish() })
-
+        txtDescripcion.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                checkDirtyFlag()
+                /*if(s.toString() != viewModel.task.value?.description)
+                    viewModel.isDirty = true*/
+                Log.e(TAG, "txtDescripcion.addTextChangedListener-------------------------------------"+viewModel.isDirty)
+            }
+        })
+        rbPrioridad.setOnRatingBarChangeListener { ratingBar: RatingBar, rating: Float, fromUser: Boolean ->
+            /*if(fromUser) {
+                if(rating.toInt() != viewModel.task.value?.priority)
+                    viewModel.isDirty = true*/
+            checkDirtyFlag()
+            Log.e(TAG, "rbPrioridad.setOnRatingBarChangeListener-------------------------------------"+viewModel.isDirty)
+        }
+    }
+    private fun checkDirtyFlag() {
+        viewModel.checkDirtyFlag(
+                txtNombre.text.toString(),
+                txtDescripcion.text.toString(),
+                rbPrioridad.rating.toInt())
+    }
+    private fun observeViewModel() {
+        //listViewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)-->Sin dagger
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[ItemViewModel::class.java]
+        viewModel.task.observe(this, Observer { task -> updateTask(task!!)})
+        viewModel.tasks.observe(this, Observer { _ -> updateParentName() })
+        viewModel.finish.observe(this, Observer { finish() })
+        viewModel.failure.observe(this, Observer { failure -> showError(failure) })
+    }
+    private fun getTaskFromCaller() {
         //intent.getParcelableExtra<Parcelable>(Objeto::class.java!!.getName())
         val idTask = intent.getIntExtra(TaskEntity::class.java.simpleName, Task.ID_NIL)
         if(idTask == Task.ID_NIL) {
-            itemViewModel.newTask()
+            viewModel.newTask()
+            btnEliminar.isEnabled = false
         }
         else {
-            itemViewModel.loadTask(idTask)
+            viewModel.loadTask(idTask)
         }
         Log.e(TAG, "onCreate:-----------------------------ID TASK-----------------------: $idTask")
-
+    }
+    private fun initButtons() {
         btnPadre.setOnClickListener {
             superPopupWindow = popupPadre()
-            superPopupWindow?.showAsDropDown(it, -7, 0)
+            superPopupWindow?.showAsDropDown(it, 0, 0)
         }
-
-        fab.setOnClickListener { _ -> onBackPressed() }
+        fab.setOnClickListener { _ -> onSalir() }
         btnEliminar.setOnClickListener { _ -> onEliminar() }
+    }
+    private fun showError(failure: Failure?) {
+        Log.e(TAG, "onCreate:e:----------------------------------------------------: $failure")
+        //TODO: Toast
+        val msg = when(failure) {
+            is Failure.TaskIdNotFound -> getString(R.string.error_task_not_found)
+            is Failure.Database -> getString(R.string.error_database)
+            is Failure.FeatureFailure -> getString(R.string.error_feature)
+            else -> getString(R.string.error_unexpected)
+        }
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -99,8 +144,7 @@ class ItemActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.home -> {
-                //TODO: Check if dirty and ask for saving
-                onBackPressed()
+                onSalir()
                 true
             }
             R.id.action_save -> {
@@ -109,11 +153,6 @@ class ItemActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-        /*
-			case R.id.action_user:
-				saveValores();
-				return true;
-        * */
     }
 
 
@@ -128,17 +167,15 @@ class ItemActivity : AppCompatActivity() {
     }
 
     private fun updateParentName() {
-        btnPadre.text = itemViewModel.getNameById() ?: getString(R.string.nodo_padre)
+        btnPadre.text = viewModel.getNameById() ?: getString(R.string.nodo_padre)
     }
 
-    //____________________________________________________________________________________________________________________________________________________
-    // POPUP PADRE
-    //______________________________________________________________________________________________
+
     private fun popupPadre(): PopupWindow? {
         val popupWindow = PopupWindow(this)
         val list = ListView(this)
 
-        val listData = itemViewModel.getTaskSupers()
+        val listData = viewModel.getTaskSupers()
         listData?.let {
             Log.e(TAG, "---2------------------------------------- ${listData.size}")
             list.adapter = padreAdapter(it)
@@ -195,31 +232,51 @@ class ItemActivity : AppCompatActivity() {
             // get the id
             v.getTag().let { it ->
                 val task: TaskReduxEntity = it as TaskReduxEntity
-                itemViewModel.setIdSuper(task.id)
-                itemViewModel.setLevel(Task.levelChildOf(task.level))
+                viewModel.setIdSuper(task.id)
+                viewModel.setLevel(Task.levelChildOf(task.level))
             }
+            checkDirtyFlag()
         }
     }
 
     private fun save() {
-        itemViewModel.save(
+        viewModel.save(
                 txtNombre.text.toString(),
                 txtDescripcion.text.toString(),
                 rbPrioridad.rating.toInt())
     }
 
     private fun onEliminar() {
-        val builder = AlertDialog.Builder(this)
-        builder
-                .setTitle(getString(R.string.delete_task))
+        AlertDialog.Builder(this)
+                .setTitle(getString(R.string.title_sure_delete))
                 .setMessage(getString(R.string.ask_sure_delete))
                 .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                    itemViewModel.delete()
+                    viewModel.delete()
                 }
                 .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                     dialog.cancel()
                 }
                 .show()
+    }
+    private fun onSalir() {
+        Log.e(TAG, "onSalir---------------------------------")
+        if(viewModel.isDirty)
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.title_exit_save))
+                .setMessage(getString(R.string.ask_exit_save))
+                .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                    save()
+                    onBackPressed()
+                }
+                .setNegativeButton(getString(R.string.no)) { dialog, _ ->
+                    onBackPressed()
+                }
+                .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .show()
+        else
+            onBackPressed()
     }
 
     companion object {

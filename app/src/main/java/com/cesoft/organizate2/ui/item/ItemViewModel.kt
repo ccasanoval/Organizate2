@@ -20,15 +20,17 @@ class ItemViewModel @Inject constructor(
         private val deleteTask: DeleteTaskDetails
 ) : BaseViewModel() {
 
-
+    var isDirty: Boolean = false
     val finish: MutableLiveData<Boolean> = MutableLiveData()
     val task: MutableLiveData<TaskEntity> = MutableLiveData()
     val tasks: MutableLiveData<List<TaskReduxEntity>> = MutableLiveData()
     private val parentName: MutableLiveData<String> = MutableLiveData()
 
+
     private var idSuper: Int = Task.NO_SUPER
     private var level: Int = Task.LEVEL1
     private var limit: Long = 0//TODO:
+
 
     fun setIdSuper(idSuper: Int) {
         this.idSuper = idSuper
@@ -81,7 +83,10 @@ class ItemViewModel @Inject constructor(
         tasks.value?.let { it ->
             return try {
                 it
-                        .filter { it.level < Task.LEVEL3 }
+                        .filter {
+                            it.level < Task.LEVEL3
+                            && it.id != task.value?.id
+                            && !it.isChild(task.value)}
                         .toTypedArray()
             }
             catch(e: Exception) {
@@ -147,7 +152,20 @@ class ItemViewModel @Inject constructor(
         }, newTask)
     }
 
+    fun checkDirtyFlag(name: String, description: String, priority: Int) {
+        isDirty = !task.value?.name.equals(name)
+                || !task.value?.description.equals(description)
+                || task.value?.priority != priority
+                || task.value?.idSuper != idSuper
+        Log.e(TAG, "$isDirty-------name=$name, desc=$description, pri=$priority, sup=$idSuper  =  ${task.value}")
+    }
+
+
     companion object {
         val TAG: String = ItemViewModel::class.java.simpleName
+        const val NAME = 1
+        const val DESCRIPTION = 2
+        const val PRIORITY = 3
+        const val SUPPER = 4
     }
 }
