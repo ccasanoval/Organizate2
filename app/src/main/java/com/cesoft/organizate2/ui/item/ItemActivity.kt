@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.content_item.*
 import android.view.animation.AnimationUtils
 import android.widget.*
 import com.cesoft.organizate2.entity.Task
+import com.cesoft.organizate2.util.Text2Speech
 import com.cesoft.organizate2.util.exception.Failure
 
 
@@ -39,6 +40,7 @@ class ItemActivity : AppCompatActivity() {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var db: Database
+    @Inject lateinit var text2Speech: Text2Speech
 
     private lateinit var viewModel: ItemViewModel
     private var superPopupWindow : PopupWindow? = null
@@ -119,6 +121,9 @@ class ItemActivity : AppCompatActivity() {
         }
         fab.setOnClickListener { _ -> onSalir() }
         btnEliminar.setOnClickListener { _ -> onEliminar() }
+        btnHablar.setOnClickListener { _ -> onHablar() }
+        btnAvisoFecha.setOnClickListener { _ -> onAvisoFecha() }
+        btnAvisoGeo.setOnClickListener { _ -> onAvisoGeo() }
     }
     private fun showError(failure: Failure?) {
         Log.e(TAG, "onCreate:e:----------------------------------------------------: $failure")
@@ -246,6 +251,18 @@ class ItemActivity : AppCompatActivity() {
                 rbPrioridad.rating.toInt())
     }
 
+    private fun onAvisoFecha() {
+        //TODO
+    }
+    private fun onAvisoGeo() {
+        //TODO
+    }
+    private fun onHablar() {
+        val name = viewModel.task.value?.name
+        val description = viewModel.task.value?.description
+        val priority = viewModel.task.value?.priority
+        text2Speech.hablar("$name, $description. $priority")
+    }
     private fun onEliminar() {
         AlertDialog.Builder(this)
                 .setTitle(getString(R.string.title_sure_delete))

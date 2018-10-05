@@ -128,7 +128,7 @@
 			android:src="@android:drawable/ic_menu_help" />
 
 		<ImageButton
-			android:id="@+id/btnAviso"
+			android:id="@+id/btnAvisoFecha"
 			style="@style/btnStyle"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

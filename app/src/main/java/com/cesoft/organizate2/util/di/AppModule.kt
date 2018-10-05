@@ -5,6 +5,7 @@ import android.content.Context
 import com.cesoft.organizate2.App
 import com.cesoft.organizate2.repo.TaskRepo
 import com.cesoft.organizate2.repo.db.Database
+import com.cesoft.organizate2.util.Text2Speech
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -31,6 +32,9 @@ class AppModule(private val app: App) {
     @Singleton
     fun provideRepo(dataSource: TaskRepo.DataBase): TaskRepo = dataSource
 
+    /*@Provides
+    @Singleton
+    fun provideText2Speech(context: Context): Text2Speech = Text2Speech(context)*/
 
     /*@Provides
     @Singleton
