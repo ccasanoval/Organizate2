@@ -1,12 +1,12 @@
 package com.cesoft.organizate2.ui.item
 
 import android.arch.lifecycle.MutableLiveData
-import com.cesoft.organizate2.entity.Task
 import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.interactor.*
 import com.cesoft.organizate2.ui.base.BaseViewModel
 import com.cesoft.organizate2.util.Log
+import java.util.*
 import javax.inject.Inject
 
 
@@ -24,49 +24,50 @@ class ItemViewModel @Inject constructor(
     val finish: MutableLiveData<Boolean> = MutableLiveData()
     val task: MutableLiveData<TaskEntity> = MutableLiveData()
     val tasks: MutableLiveData<List<TaskReduxEntity>> = MutableLiveData()
-    private val parentName: MutableLiveData<String> = MutableLiveData()
+    //private val parentName: MutableLiveData<String> = MutableLiveData()
 
+    val taskId: Int?
+        get() = task.value?.id
+    val taskName: String?
+        get() = task.value?.name
+    val taskDescription: String?
+        get() = task.value?.description
+    val taskPriority: Int?
+        get() = task.value?.priority
 
-    private var idSuper: Int = Task.NO_SUPER
-    private var level: Int = Task.LEVEL1
-    private var limit: Long = 0//TODO:
+    private var idSuper: Int = TaskEntity.NO_SUPER
+    private var level: Int = TaskEntity.LEVEL1
+    private var limit: Date = Date(0)
 
 
     fun setIdSuper(idSuper: Int) {
         this.idSuper = idSuper
-        Log.e(TAG, "setIdSuper:------------------------------------------------: $idSuper")
     }
     fun setLevel(level: Int) {
         this.level = level
-        Log.e(TAG, "level:------------------------------------------------: $level")
     }
 
     private fun handleTask(task: TaskEntity) {
-        Log.e(TAG, "handleTask:----------------------------------------------------$task")
         this.task.value = task
         loadTasks()
     }
-    fun loadTask(taskId: Int) {
-        Log.e(TAG, "loadTask:------------------------------------------------------ $taskId")
-        getTask.execute({ it.either(::handleFailure, ::handleTask) }, taskId)
+    fun loadTask(id: Int) {
+        getTask.execute({ it.either(::handleFailure, ::handleTask) }, id)
     }
     private fun handleTasks(tasks: List<TaskReduxEntity>) {
-        Log.e(TAG, "handleTasks:-------------------------------------------------TASKS $tasks")
-        Log.e(TAG, "handleTasks:-------------------------------------------------SIZE ${tasks.size}")
         this.tasks.value = tasks
-        Log.e(TAG, "handleTasks:-----------------------------parentName-----------------------${this.parentName.value}")
     }
     private fun loadTasks() {
-        Log.e(TAG, "loadTasks:------------------------------------------------------")
         getTasks.execute({ it.either(::handleFailure, ::handleTasks) }, UseCase.None())
     }
 
     fun getNameById() : String? {
-        if(task.value?.idSuper == Task.ID_NIL)return null
+        if(task.value?.idSuper == TaskEntity.ID_NIL)return null
         task.value?.idSuper?.let { id ->
             tasks.value?.let { it ->
                 try {
                     return it
+                            .asSequence()
                             .filter { it.id == id }
                             .map { it.name }
                             .single()
@@ -84,7 +85,7 @@ class ItemViewModel @Inject constructor(
             return try {
                 it
                         .filter {
-                            it.level < Task.LEVEL3
+                            it.level < TaskEntity.LEVEL3
                             && it.id != task.value?.id
                             && !it.isChild(task.value)}
                         .toTypedArray()
@@ -129,43 +130,43 @@ class ItemViewModel @Inject constructor(
                     priority,
                     task.value!!.limit,
                     task.value!!.created,
-                    java.util.Date().time,
+                    Date(),
                     List(0) {TaskEntity.None})
         }
         else {
             newTask = TaskEntity(
-                    Task.ID_NIL,
+                    TaskEntity.ID_NIL,
                     idSuper,
                     name,
                     level,
                     description,
                     priority,
                     limit,//TODO:
-                    java.util.Date().time,
-                    java.util.Date().time,
+                    Date(),
+                    Date(),
                     List(0) {TaskEntity.None})
         }
 
-        Log.e(TAG, "SAVE:------$priority--------------------$newTask ")
+        //Log.e(TAG, "SAVE:------$priority--------------------$newTask ")
         saveTask.execute({it ->
             it.either(::handleFailure){finish.value = true; Unit}
         }, newTask)
     }
 
-    fun checkDirtyFlag(name: String, description: String, priority: Int) {
+    fun setDirtyFlag(name: String, description: String, priority: Int) {
         isDirty = !task.value?.name.equals(name)
                 || !task.value?.description.equals(description)
                 || task.value?.priority != priority
                 || task.value?.idSuper != idSuper
-        Log.e(TAG, "$isDirty-------name=$name, desc=$description, pri=$priority, sup=$idSuper  =  ${task.value}")
+        //Log.e(TAG, "$isDirty-------name=$name, desc=$description, pri=$priority, sup=$idSuper  =  ${task.value}")
     }
 
 
     companion object {
         val TAG: String = ItemViewModel::class.java.simpleName
-        const val NAME = 1
+        /*const val NAME = 1
         const val DESCRIPTION = 2
         const val PRIORITY = 3
-        const val SUPPER = 4
+        const val SUPPER = 4*/
     }
 }

@@ -2,6 +2,8 @@ package com.cesoft.organizate2.util.di
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import com.cesoft.organizate2.ui.alert.date.AlertDateViewModel
+import com.cesoft.organizate2.ui.alert.geo.AlertGeoViewModel
 import com.cesoft.organizate2.ui.item.ItemViewModel
 import com.cesoft.organizate2.ui.list.ListViewModel
 import dagger.Binds
@@ -44,4 +46,14 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ItemViewModel::class)
     internal abstract fun itemViewModel(viewModel: ItemViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AlertDateViewModel::class)
+    internal abstract fun alertDateViewModel(viewModel: AlertDateViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AlertGeoViewModel::class)
+    internal abstract fun alertGeoViewModel(viewModel: AlertGeoViewModel): ViewModel
 }

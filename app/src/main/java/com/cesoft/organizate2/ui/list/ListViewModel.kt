@@ -3,8 +3,7 @@ package com.cesoft.organizate2.ui.list
 import com.cesoft.organizate2.ui.base.BaseViewModel
 import javax.inject.Inject
 import android.arch.lifecycle.MutableLiveData
-import android.util.Log
-import com.cesoft.organizate2.entity.Task
+import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.interactor.GetTaskList
 import com.cesoft.organizate2.interactor.UseCase
@@ -29,7 +28,7 @@ class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : Bas
 
 
     fun onAddTask() {
-        view?.startActivity(Task.ID_NIL)
+        view?.startActivity(TaskEntity.ID_NIL)
         //Log.e(TAG, "onAddTask:------------------------------------------------------------")
     }
 

@@ -9,7 +9,7 @@ import android.widget.ExpandableListView
 import android.widget.ImageButton
 import android.widget.TextView
 import com.cesoft.organizate2.R
-import com.cesoft.organizate2.entity.Task
+import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.ui.list.ListViewModel
 import java.util.ArrayList
@@ -25,7 +25,7 @@ class NivelUnoListAdapter(
         listaCompleta: List<TaskReduxEntity>)
     : BaseExpandableListAdapter() {
 
-    private val lista: List<TaskReduxEntity> = TaskReduxEntity.filterByLevel(listaCompleta, Task.LEVEL1)
+    private val lista: List<TaskReduxEntity> = TaskReduxEntity.filterByLevel(listaCompleta, TaskEntity.LEVEL1)
     private val inflater = LayoutInflater.from(exContext)
     private val listViewCache = ArrayList<CexpandableListView>()
 

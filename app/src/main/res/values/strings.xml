@@ -44,11 +44,6 @@
     <string name="nada">Nothing</string>
 
     <string name="activo">Active</string>
-    <string name="mes">+Month</string>
-    <string name="dia_mes">+Mnth.Day</string>
-    <string name="dia_semana">+Week Day</string>
-    <string name="hora">+Hour</string>
-    <string name="minuto">+Minute</string>
     <string name="fecha">Date:</string>
     <string name="desactivar_por_ahora">Don\'t alert me again\nfor today</string>
     <string name="leer">Read the content</string>
@@ -75,6 +70,7 @@
     <string name="cargando">Loading…</string>
     <string name="max_num_items">Maximum number of items reached</string>
     <string name="no_task_with_super_level">There is no task with superior level that this</string>
+    <string name="no_task_list">There isn\'t any task in the list</string>
     <string name="error_task_not_found">Task not found</string>
     <string name="error_database">Database error</string>
     <string name="error_feature">Feature error</string>
@@ -87,5 +83,49 @@
     <string name="title_sure_delete">Delete task</string>
     <string name="ask_exit_save">Task changed. Do you want to save it?</string>
     <string name="title_exit_save">Save task</string>
+    <string name="text2speech_task">Task %s, %s. Priority %d</string>
+
+    <string name="title_tasks">Tasks</string>
+    <string name="title_task">Task</string>
+    <string name="title_notif_date">Date Notice</string>
+    <string name="title_notif_geo">Geo Notice</string>
+    <string name="title_edit_date">Edit Field</string>
+    <string name="minutes">Minutes:</string>
+    <string name="edit_minutes">Edit minutes</string>
+    <string name="hours">Hours:</string>
+    <string name="edit_hours">Edit hours</string>
+    <string name="days_month">Days Month:</string>
+    <string name="edit_days_month">Edit Days Month</string>
+    <string name="days_week">Days Week:</string>
+    <string name="edit_days_week">Edit Days Week</string>
+    <string name="months">Months:</string>
+    <string name="edit_months">Edit Months</string>
+    <string name="years">Years:</string>
+    <string name="edit_years">Edit Years</string>
+
+    <string name="all">All</string>
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+
 
 </resources>

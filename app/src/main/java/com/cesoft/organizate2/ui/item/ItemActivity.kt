@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -23,7 +24,8 @@ import kotlinx.android.synthetic.main.activity_item.*
 import kotlinx.android.synthetic.main.content_item.*
 import android.view.animation.AnimationUtils
 import android.widget.*
-import com.cesoft.organizate2.entity.Task
+import com.cesoft.organizate2.ui.alert.date.AlertDateActivity
+import com.cesoft.organizate2.ui.alert.geo.AlertGeoActivity
 import com.cesoft.organizate2.util.Text2Speech
 import com.cesoft.organizate2.util.exception.Failure
 
@@ -45,7 +47,6 @@ class ItemActivity : AppCompatActivity() {
     private lateinit var viewModel: ItemViewModel
     private var superPopupWindow : PopupWindow? = null
     //private var idSuper: Int = Task.ID_NIL
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +90,7 @@ class ItemActivity : AppCompatActivity() {
         }
     }
     private fun checkDirtyFlag() {
-        viewModel.checkDirtyFlag(
+        viewModel.setDirtyFlag(
                 txtNombre.text.toString(),
                 txtDescripcion.text.toString(),
                 rbPrioridad.rating.toInt())
@@ -104,8 +105,8 @@ class ItemActivity : AppCompatActivity() {
     }
     private fun getTaskFromCaller() {
         //intent.getParcelableExtra<Parcelable>(Objeto::class.java!!.getName())
-        val idTask = intent.getIntExtra(TaskEntity::class.java.simpleName, Task.ID_NIL)
-        if(idTask == Task.ID_NIL) {
+        val idTask = intent.getIntExtra(TaskEntity::class.java.simpleName, TaskEntity.ID_NIL)
+        if(idTask == TaskEntity.ID_NIL) {
             viewModel.newTask()
             btnEliminar.isEnabled = false
         }
@@ -119,7 +120,7 @@ class ItemActivity : AppCompatActivity() {
             superPopupWindow = popupPadre()
             superPopupWindow?.showAsDropDown(it, 0, 0)
         }
-        fab.setOnClickListener { _ -> onSalir() }
+        fabBack.setOnClickListener { _ -> onSalir() }
         btnEliminar.setOnClickListener { _ -> onEliminar() }
         btnHablar.setOnClickListener { _ -> onHablar() }
         btnAvisoFecha.setOnClickListener { _ -> onAvisoFecha() }
@@ -127,7 +128,6 @@ class ItemActivity : AppCompatActivity() {
     }
     private fun showError(failure: Failure?) {
         Log.e(TAG, "onCreate:e:----------------------------------------------------: $failure")
-        //TODO: Toast
         val msg = when(failure) {
             is Failure.TaskIdNotFound -> getString(R.string.error_task_not_found)
             is Failure.Database -> getString(R.string.error_database)
@@ -182,7 +182,10 @@ class ItemActivity : AppCompatActivity() {
 
         val listData = viewModel.getTaskSupers()
         listData?.let {
-            Log.e(TAG, "---2------------------------------------- ${listData.size}")
+            if(listData.isEmpty()) {
+                Toast.makeText(this, getString(R.string.no_task_list), Toast.LENGTH_LONG).show()
+                return null
+            }
             list.adapter = padreAdapter(it)
             list.onItemClickListener = PadreDropdownOnItemClickListener()
             // some other visual settings
@@ -207,9 +210,9 @@ class ItemActivity : AppCompatActivity() {
                 var prefix = ""
                 val task = getItem(position)!!
                 when(task.level) {
-                    Task.LEVEL1 -> prefix = " "
-                    Task.LEVEL2 -> prefix = "    "
-                    Task.LEVEL3 -> prefix = "       "
+                    TaskEntity.LEVEL1 -> prefix = " "
+                    TaskEntity.LEVEL2 -> prefix = "    "
+                    TaskEntity.LEVEL3 -> prefix = "       "
                 }
                 listItem.text = "$prefix${task.name}"
                 listItem.tag = getItem(position)//getItem(position)?.id
@@ -238,7 +241,7 @@ class ItemActivity : AppCompatActivity() {
             v.getTag().let { it ->
                 val task: TaskReduxEntity = it as TaskReduxEntity
                 viewModel.setIdSuper(task.id)
-                viewModel.setLevel(Task.levelChildOf(task.level))
+                viewModel.setLevel(TaskEntity.levelChildOf(task.level))
             }
             checkDirtyFlag()
         }
@@ -252,16 +255,25 @@ class ItemActivity : AppCompatActivity() {
     }
 
     private fun onAvisoFecha() {
-        //TODO
+        val intent = Intent(this, AlertDateActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra(TaskEntity::class.java.simpleName, viewModel.taskId)
+        startActivityForResult(intent, REQUEST_AVISO_FECHA)
+        Log.e(TAG, "onAvisoFecha------------------------------- ${viewModel.taskId}")
     }
     private fun onAvisoGeo() {
-        //TODO
+        val intent = Intent(this, AlertGeoActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra(TaskEntity::class.java.simpleName, viewModel.taskId)
+        startActivityForResult(intent, REQUEST_AVISO_GEO)
     }
     private fun onHablar() {
-        val name = viewModel.task.value?.name
-        val description = viewModel.task.value?.description
-        val priority = viewModel.task.value?.priority
-        text2Speech.hablar("$name, $description. $priority")
+        val name = viewModel.taskName
+        val description = viewModel.taskDescription
+        val priority = viewModel.taskPriority
+        val phrase = getString(R.string.text2speech_task)
+        val text = String.format(phrase, name, description, priority)
+        text2Speech.hablar(text)
     }
     private fun onEliminar() {
         AlertDialog.Builder(this)
@@ -285,7 +297,7 @@ class ItemActivity : AppCompatActivity() {
                     save()
                     onBackPressed()
                 }
-                .setNegativeButton(getString(R.string.no)) { dialog, _ ->
+                .setNegativeButton(getString(R.string.no)) { _, _ ->
                     onBackPressed()
                 }
                 .setNeutralButton(getString(R.string.cancel)) { dialog, _ ->
@@ -296,7 +308,22 @@ class ItemActivity : AppCompatActivity() {
             onBackPressed()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        Log.e(TAG, "onActivityResult-------------------------------------------")
+        /*if(requestCode == ) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+        }*/
+    }
+
     companion object {
         val TAG: String = ItemActivity::class.simpleName!!
+        const val REQUEST_AVISO_FECHA = 69
+        const val REQUEST_AVISO_GEO = 70
     }
 }

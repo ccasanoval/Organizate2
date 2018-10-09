@@ -27,6 +27,23 @@
             android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".ui.alert.date.AlertDateActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_notif_date"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ui.alert.geo.AlertGeoActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_notif_geo"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ui.alert.date.EditDateActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/title_edit_date"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>

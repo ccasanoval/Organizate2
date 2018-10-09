@@ -11,7 +11,7 @@ import com.cesoft.organizate2.util.di.DaggerAppComponent
 //TODO: Fingerprint and encrypting room db
 //https://proandroiddev.com/secure-data-in-android-encryption-in-android-part-2-991a89e55a23
 //https://proandroiddev.com/secure-data-in-android-encrypting-large-data-dda256a55b36
-
+//TODO: Reanme all classes to spanish or english
 class App : Application() {
 
     val appComponent: AppComponent by lazy(mode = LazyThreadSafetyMode.NONE) {

@@ -40,11 +40,6 @@
 
 	<string name="activo">Activo</string>
 	<string name="fecha">Fecha:</string>
-	<string name="mes">+Mes</string>
-	<string name="dia_mes">+Día Mes</string>
-	<string name="dia_semana">+Día Sem.</string>
-	<string name="hora">+Hora</string>
-	<string name="minuto">+Minuto</string>
 	<string name="desactivar_por_ahora">No me avises\nmás hoy</string>
 	<string name="leer">Lee el contenido</string>
 
@@ -84,6 +79,7 @@
 	<string name="guardar">Guardar</string>
 	<string name="max_num_items">Alcanzado máximo número de elementos</string>
     <string name="no_task_with_super_level">No hay tareas con nivel superior a actual</string>
+	<string name="no_task_list">No hay tareas</string>
 	<string name="error_task_not_found">No se encontró la tarea</string>
 	<string name="error_database">Error en la base de datos</string>
 	<string name="error_feature">Error en una función</string>
@@ -96,5 +92,48 @@
 	<string name="title_sure_delete">Eliminar tarea</string>
 	<string name="ask_exit_save">Cambió la tarea. ¿Deseas guardarla?</string>
 	<string name="title_exit_save">Guardar tarea</string>
+	<string name="text2speech_task">tarea %s, %s. Prioridad %d</string>
+
+	<string name="title_tasks">Tareas</string>
+	<string name="title_task">Tarea</string>
+	<string name="title_notif_date">Aviso por Fecha</string>
+	<string name="title_notif_geo">Geo Aviso</string>
+	<string name="title_edit_date">Editar Campo</string>
+	<string name="minutes">Minutos:</string>
+	<string name="edit_minutes">Editar minutos</string>
+	<string name="hours">Horas:</string>
+	<string name="edit_hours">Editar horas</string>
+	<string name="days_month">Días Mes:</string>
+	<string name="edit_days_month">Editar Días Mes</string>
+	<string name="days_week">Días Semana:</string>
+	<string name="edit_days_week">Editar Días Semana</string>
+	<string name="months">Meses:</string>
+	<string name="edit_months">Editar Meses</string>
+	<string name="years">Años:</string>
+	<string name="edit_years">Editar Años</string>
+
+	<string name="all">Todo</string>
+	<string name="january">Enero</string>
+	<string name="february">Febrero</string>
+	<string name="march">Marzo</string>
+	<string name="april">Abril</string>
+	<string name="may">Mayo</string>
+	<string name="june">Junio</string>
+	<string name="july">Julio</string>
+	<string name="august">Agosto</string>
+	<string name="september">Septiembre</string>
+	<string name="october">Octubre</string>
+	<string name="november">Noviembre</string>
+	<string name="december">Diciembre</string>
+	<string name="monday">Lunes</string>
+	<string name="tuesday">Martes</string>
+	<string name="wednesday">Miércoles</string>
+	<string name="thursday">Jueves</string>
+	<string name="friday">Viernes</string>
+	<string name="saturday">Sábado</string>
+	<string name="sunday">Domingo</string>
+
+	<string name="add">Añadir</string>
+	<string name="delete">Eliminar</string>
 
 </resources>

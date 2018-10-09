@@ -10,6 +10,7 @@ import android.arch.persistence.room.Dao
 interface TaskDao {
     @Insert
     fun insert(task: TaskTable)
+
     @Insert
     fun insert(task: List<TaskTable>)
 
@@ -18,19 +19,24 @@ interface TaskDao {
 
     @Delete
     fun delete(task: TaskTable)
-    @Query("DELETE FROM ${TaskTableContract.TABLE_NAME}")
+
+    @Query("DELETE FROM ${TablesContracts.TABLE_NAME}")
     fun nukeTable()
 
-    @Query("SELECT * FROM ${TaskTableContract.TABLE_NAME} WHERE id = :id")
+    @Suppress("AndroidUnresolvedRoomSqlReference")
+    @Query("SELECT * FROM ${TablesContracts.TABLE_NAME} WHERE id = :id")
     fun selectById(id: Int) : TaskTable?
-    @Query("SELECT id, idSuper, name, level FROM ${TaskTableContract.TABLE_NAME}")
+
+    @Suppress("AndroidUnresolvedRoomSqlReference")
+    @Query("SELECT id, idSuper, name, level FROM ${TablesContracts.TABLE_NAME}")
+
     fun selectRedux() : List<TaskReduxTable>
-    @Query("SELECT * FROM ${TaskTableContract.TABLE_NAME}")
+    @Query("SELECT * FROM ${TablesContracts.TABLE_NAME}")
     fun select() : List<TaskTable>
 
-    //@Query("SELECT id, idSuper, name, level FROM ${TaskTableContract.TABLE_NAME}")
+    //@Query("SELECT id, idSuper, name, level FROM ${TablesContracts.TABLE_NAME}")
     //fun selectReduxLive() : LiveData<List<TaskReduxTable>>
-    //@Query("SELECT * FROM ${TaskTableContract.TABLE_NAME} WHERE id = :id")
+    //@Query("SELECT * FROM ${TablesContracts.TABLE_NAME} WHERE id = :id")
     //fun selectByIdLive(id: Int) : LiveData<TaskTable>
 
     //@Query("SELECT * FROM TaskTable")

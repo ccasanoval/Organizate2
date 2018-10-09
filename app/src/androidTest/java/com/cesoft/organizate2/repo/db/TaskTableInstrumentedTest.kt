@@ -3,14 +3,14 @@ package com.cesoft.organizate2.repo.db
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
-import com.cesoft.organizate2.entity.Task.LEVEL1
+import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.util.extension.None
 import org.junit.Assert.*
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by ccasanova on 25/05/2018
@@ -31,7 +31,7 @@ class TaskTableInstrumentedTest {
         mDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), Database::class.java)
                 .allowMainThreadQueries()
                 .build()
-        dao = mDatabase!!.dao()
+        dao = mDatabase!!.daoTask()
     }
 
     @After
@@ -42,11 +42,14 @@ class TaskTableInstrumentedTest {
 
     private fun getFakeTasks(size: Int, idFrom: Int = 1, idParent: Int = Int.None): List<TaskTable> {
         val list = ArrayList<TaskTable>()
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.MONTH, 2)
+        val date = calendar.time
         for(i in idFrom until idFrom+size) {
             val task = TaskTable(i, idParent, "Title $i",
-                    LEVEL1,"Desc $i",
-                    5, System.currentTimeMillis()+10*60*60*1000,
-                    System.currentTimeMillis(), System.currentTimeMillis())
+                    TaskEntity.LEVEL1,"Desc $i",
+                    5, date,
+                    Date(), Date())
             list.add(task)
         }
         return list
@@ -114,23 +117,6 @@ class TaskTableInstrumentedTest {
         assertEquals(1, list.size)
         assertEquals(sNameUpdated, task3!!.name)
     }
-    /* No need to update Redux
-    @Test
-    @Throws(InterruptedException::class)
-    fun onUpdating_checkIf_UpdateHappensCorrectly_REDUX() {
-        val taskOri = getFakeTasks(1)[0]
-        val task = taskOri//TaskReduxTable(taskOri)//TaskReduxTable(taskOri.id, taskOri.idSuper, taskOri.name, taskOri.)
-        dao!!.insert(task)
-        val sUpdated = "-UPDATED-"
-        val task2 = TaskTable(task.id, task.idSuper, sUpdated, task.description,
-                task.priority, task.,task.limit,task.created,task.modified)
-        dao!!.update(task2)
-        val list = dao!!.select()
-        val task3 = dao!!.selectById(task.id)
-
-        assertEquals(1, list.size)
-        assertEquals(sUpdated, task3!!.name)
-    }*/
 
     @Test
     @Throws(InterruptedException::class)

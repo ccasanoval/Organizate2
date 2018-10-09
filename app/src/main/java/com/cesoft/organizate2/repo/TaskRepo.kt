@@ -1,6 +1,6 @@
 package com.cesoft.organizate2.repo
 
-import com.cesoft.organizate2.entity.Task
+import com.cesoft.organizate2.entity.AlertDateEntity
 import com.cesoft.organizate2.entity.TaskEntity
 import com.cesoft.organizate2.entity.TaskReduxEntity
 import com.cesoft.organizate2.util.exception.Failure
@@ -18,6 +18,8 @@ interface TaskRepo {
     fun getTaskDetails(id: Int): Either<Failure, TaskEntity>
     fun saveTasksDetails(task: TaskEntity): Either<Failure, Unit>
     fun deleteTasksDetails(task: TaskEntity): Either<Failure, Unit>
+    //
+    fun getAlertDate(id: Int): Either<Failure, AlertDateEntity>
 
     ///---------------------------------------------------------------------------------------------
     //class Network
@@ -29,7 +31,7 @@ interface TaskRepo {
 
         override fun getTasksList(): Either<Failure, List<TaskReduxEntity>> {
             return try {
-                val tasks0 = db.dao().selectRedux()
+                val tasks0 = db.daoTask().selectRedux()
                 val tasks1 : List<TaskReduxEntity> = tasks0.map { it.toTaskEntity() }
                 val tasks2 : List<TaskReduxEntity> = TaskReduxEntity.createTree(tasks1)
                 val tasks3 : List<TaskReduxEntity> = TaskReduxEntity.orderTree(tasks2)
@@ -42,7 +44,7 @@ interface TaskRepo {
         }
         override fun getTaskDetails(id: Int): Either<Failure, TaskEntity> {
             return try {
-                val task0 = db.dao().selectById(id)?.toTaskEntity() ?: return Either.Left(Failure.TaskIdNotFound())
+                val task0 = db.daoTask().selectById(id)?.toTaskEntity() ?: return Either.Left(Failure.TaskIdNotFound())
                 Either.Right(task0)
             }
             catch(e: Exception) {
@@ -53,10 +55,10 @@ interface TaskRepo {
 
         override fun saveTasksDetails(task: TaskEntity): Either<Failure, Unit> {
             return try {
-                if(task.id == Task.ID_NIL)
-                    db.dao().insert(TaskTable(task))
+                if(task.id == TaskEntity.ID_NIL)
+                    db.daoTask().insert(TaskTable(task))
                 else
-                    db.dao().update(TaskTable(task))
+                    db.daoTask().update(TaskTable(task))
                 Either.Right(Unit)
             }
             catch(e: Exception) {
@@ -67,7 +69,7 @@ interface TaskRepo {
 
         override fun deleteTasksDetails(task: TaskEntity): Either<Failure, Unit> {
             return try {
-                db.dao().delete(TaskTable(task))
+                db.daoTask().delete(TaskTable(task))
                 Either.Right(Unit)
             }
             catch(e: Exception) {
@@ -76,6 +78,20 @@ interface TaskRepo {
             }
         }
 
+        //------ ALERT DATE
+        override fun getAlertDate(id: Int): Either<Failure, AlertDateEntity> {
+            return try {
+                val alert = db.daoAlertDate().selectById(id)?.toEntity() ?: return Either.Left(Failure.TaskIdNotFound())
+                Either.Right(alert)
+            }
+            catch(e: Exception) {
+                Log.e(TAG, "TaskRepo:DataBase:getAlertDate:e:--------------------------------",e)
+                Either.Left(Failure.Database())
+            }
+        }
+
+
+        //------
         companion object {
             val TAG: String = DataBase::class.java.simpleName
         }

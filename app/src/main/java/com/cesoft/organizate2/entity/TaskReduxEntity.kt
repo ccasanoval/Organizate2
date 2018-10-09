@@ -1,7 +1,7 @@
 package com.cesoft.organizate2.entity
 
 import com.cesoft.organizate2.util.extension.None
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by ccasanova on 23/05/2018
@@ -21,7 +21,8 @@ data class TaskReduxEntity(
         }
 
     fun toTaskEntity() : TaskEntity {
-        return TaskEntity(id, idSuper, name, level, "",0,0,0,0, listOf())
+        return TaskEntity(id, idSuper, name, level, "",0,
+                Date(0),Date(0),Date(0), listOf())
     }
 
     fun isChild(task: TaskEntity?) : Boolean {
@@ -57,7 +58,7 @@ data class TaskReduxEntity(
         fun orderTree(list: List<TaskReduxEntity>): List<TaskReduxEntity> {
             val res = ArrayList<TaskReduxEntity>()
             for(task1 in list) {
-                if(task1.level == Task.LEVEL1) {
+                if(task1.level == TaskEntity.LEVEL1) {
                     res.add(task1)
                     for(task2 in task1.childs) {
                         res.add(task2)
