@@ -17,7 +17,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.cesoft.organizate2.R
-import com.cesoft.organizate2.ui.item.ItemActivity
 import kotlinx.android.synthetic.main.activity_edit_date.*
 import com.cesoft.organizate2.entity.AlertDateEntity.Companion.TYPE_MINUTES
 import com.cesoft.organizate2.entity.AlertDateEntity.Companion.TYPE_HOURS
@@ -75,13 +74,14 @@ class EditDateActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onCreate(savedInstanceState, persistentState)
         setContentView(R.layout.activity_edit_date)
+        Log.e(TAG, "onCreate:----------------------------------------------------")
         lstCurrentValues.layoutManager = LinearLayoutManager(this)
         getDataFromCaller()
     }
 
     private fun getDataFromCaller() {
         val o:EditDateParcelable = intent.getParcelableExtra(EditDateParcelable::class.java.name)
-        Log.e(ItemActivity.TAG, "getDataFromCaller:----------------------------------------------------: $o")
+        Log.e(TAG, "getDataFromCaller:----------------------------------------------------: $o")
         initValueNameList(o.type, o.valueNames)
         initCurrentValueList(o.type, o.valueNames, o.currentValues)
     }
@@ -99,6 +99,7 @@ class EditDateActivity : AppCompatActivity() {
                     if(s != null) data.add(s)
                 }
         }
+        Log.e(TAG, "getDataFromCaller:----------------------------------------------------: $data")
         //lstCurrentValues.layoutManager = GridLayoutManager(this, 2)
         lstCurrentValues.adapter = ValuesAdapter(data, this)
     }
@@ -133,5 +134,10 @@ class EditDateActivity : AppCompatActivity() {
         //res.putExtra("", IntArray())
         setResult(Activity.RESULT_OK, res)
         finish()
+    }
+
+
+    companion object {
+        val TAG: String = EditDateActivity::class.simpleName!!
     }
 }

@@ -224,8 +224,9 @@ class AlertDateActivity : AppCompatActivity() {
             else ->
                 null
         }
+        Log.e(TAG, "onEditarElemento:---------------------------------------------------- $type")
         val intent = Intent(this, EditDateActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra(EditDateActivity.EditDateParcelable::class.java.simpleName, data)
         startActivityForResult(intent, type)
     }
