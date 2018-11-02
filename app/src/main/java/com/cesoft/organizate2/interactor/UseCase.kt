@@ -3,12 +3,10 @@ package com.cesoft.organizate2.interactor
 /**
  * Created by ccasanova on 24/05/2018
  */
+
 import com.cesoft.organizate2.util.exception.Failure
 import com.cesoft.organizate2.util.functional.Either
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.launch
+import kotlinx.coroutines.*
 
 /**
  * Abstract class for a Use Case (Interactor in terms of Clean Architecture).
@@ -23,19 +21,15 @@ abstract class UseCase<out Type, in Params> where Type : Any {
 
     abstract suspend fun run(params: Params): Either<Failure, Type>
 
-    fun execute(onResult: (Either<Failure, Type>) -> Unit, params: Params) {
-        val job = async(CommonPool) { run(params) }
-        launch(UI) { onResult.invoke(job.await()) }
-    }
+    /*fun execute(onResult: (Either<Failure, Type>) -> Unit, params: Params) {
+        val job = GlobalScope.async { run(params) }
+        GlobalScope.launch(Dispatchers.Main) { onResult.invoke(job.await()) }
+    }*/
 
     operator fun invoke(params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
-        val job = async(CommonPool) { run(params) }
-        launch(UI) { onResult(job.await()) }
+        val job = GlobalScope.async { run(params) }
+        GlobalScope.launch(Dispatchers.Main) { onResult(job.await()) }
     }
 
-    class None
-    /*companion object {
-        class NoneClass
-        val None = NoneClass()
-    }*/
+    object None
 }

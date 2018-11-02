@@ -23,7 +23,7 @@ class ListViewModel @Inject constructor(private val getTasks: GetTaskList) : Bas
         this.tasks.value = tasks
     }
     fun loadTask() {
-        getTasks.execute({ it.either(::handleFailure, ::handleTaskList) }, UseCase.None())
+        getTasks(UseCase.None) { it.either(::handleFailure, ::handleTaskList) }
     }
 
 

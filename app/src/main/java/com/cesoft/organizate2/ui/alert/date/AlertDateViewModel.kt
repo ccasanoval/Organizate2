@@ -27,7 +27,7 @@ class AlertDateViewModel @Inject constructor(
 
 
     fun loadAlert(idTask: Int) {
-        getAlertDate.execute({ it.either(::handleFailure, ::handleData) }, idTask)
+        getAlertDate(idTask) { it.either(::handleFailure, ::handleData) }
     }
     private fun handleData(data: AlertDateEntity) {
         this.data.value = data

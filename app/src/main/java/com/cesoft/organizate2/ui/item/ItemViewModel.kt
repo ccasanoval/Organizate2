@@ -52,13 +52,13 @@ class ItemViewModel @Inject constructor(
         loadTasks()
     }
     fun loadTask(id: Int) {
-        getTask.execute({ it.either(::handleFailure, ::handleTask) }, id)
+        getTask(id) { it.either(::handleFailure, ::handleTask) }
     }
     private fun handleTasks(tasks: List<TaskReduxEntity>) {
         this.tasks.value = tasks
     }
     private fun loadTasks() {
-        getTasks.execute({ it.either(::handleFailure, ::handleTasks) }, UseCase.None())
+        getTasks(UseCase.None) { it.either(::handleFailure, ::handleTasks) }
     }
 
     fun getNameById() : String? {
@@ -107,14 +107,14 @@ class ItemViewModel @Inject constructor(
             // Delete children
             val childs: List<TaskReduxEntity> = TaskReduxEntity.filterByParent(tasks.value!!, thisTask.toTaskReduxEntity())
             for(childTask in childs) {
-                deleteTask.execute({ it ->
+                deleteTask(childTask.toTaskEntity()) { it ->
                     it.either({}) { finish.value = true; Unit }
-                }, childTask.toTaskEntity())
+                }
             }
             // Delete task
-            deleteTask.execute({ it ->
+            deleteTask(thisTask) { it ->
                 it.either(::handleFailure) { finish.value = true; Unit }
-            }, thisTask)
+            }
         }
     }
 
@@ -148,9 +148,12 @@ class ItemViewModel @Inject constructor(
         }
 
         //Log.e(TAG, "SAVE:------$priority--------------------$newTask ")
-        saveTask.execute({it ->
+        /*saveTask.execute({it ->
             it.either(::handleFailure){finish.value = true; Unit}
-        }, newTask)
+        }, newTask)*/
+        saveTask(newTask) { it ->
+            it.either(::handleFailure){finish.value = true; Unit}
+        }
     }
 
     fun setDirtyFlag(name: String, description: String, priority: Int) {
